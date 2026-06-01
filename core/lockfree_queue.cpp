@@ -1,16 +1,14 @@
-#include <atomic>
-#include <cstddef>
 #include "lockfree_queue.h"
+#include <cstring>
 
-LockFreeQueue::LockFreeQueue(size_t capacity) 
-    : m_capacity(capacity)
-    , m_buffer(new TelemetryPacket[capacity])
+LockFreeQueue::LockFreeQueue(size_t capacity)
+    : m_capacity(1)
     , m_write_index(0)
     , m_read_index(0)
 {
-    // Ensure capacity is power of two for fast modulo
-    m_capacity = 1;
     while (m_capacity < capacity) m_capacity <<= 1;
+    m_buffer = new TelemetryPacket[m_capacity];
+    memset(m_buffer, 0, sizeof(TelemetryPacket) * m_capacity);
 }
 
 LockFreeQueue::~LockFreeQueue() {
@@ -22,7 +20,7 @@ bool LockFreeQueue::push(const TelemetryPacket& packet) {
     size_t read_idx = m_read_index.load(std::memory_order_acquire);
     
     if (write_idx - read_idx >= m_capacity) {
-        return false; // Queue full
+        return false;
     }
     
     m_buffer[write_idx & (m_capacity - 1)] = packet;
@@ -35,7 +33,7 @@ bool LockFreeQueue::pop(TelemetryPacket& packet) {
     size_t write_idx = m_write_index.load(std::memory_order_acquire);
     
     if (read_idx == write_idx) {
-        return false; // Queue empty
+        return false;
     }
     
     packet = m_buffer[read_idx & (m_capacity - 1)];
@@ -47,4 +45,14 @@ size_t LockFreeQueue::size() const {
     size_t write_idx = m_write_index.load(std::memory_order_acquire);
     size_t read_idx = m_read_index.load(std::memory_order_acquire);
     return write_idx - read_idx;
+}
+
+bool LockFreeQueue::empty() const {
+    return size() == 0;
+}
+
+bool LockFreeQueue::full() const {
+    size_t write_idx = m_write_index.load(std::memory_order_acquire);
+    size_t read_idx = m_read_index.load(std::memory_order_acquire);
+    return (write_idx - read_idx) >= m_capacity;
 }
