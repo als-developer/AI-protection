@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bioshield-config
+  namespace: bioshield-system
+data:
+  redis.host: "redis.bioshield-system.svc.cluster.local"
+  redis.port: "6379"
+  log.level: "info"
+  workers.count: "8"
+  rate.limit.default: "10000"
+  rate.limit.burst: "15000"
+  billing.rate: "0.10"
+  environment: "production"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bioshield-engine-config
+  namespace: bioshield-system
+data:
+  core.affinity.core: "0"
+  core.realtime.priority: "99"
+  core.memory.pool.mb: "512"
+  core.ebpf.interface: "eth0"
