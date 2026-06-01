@@ -1,6 +1,9 @@
 site_name: Sovereign Bio-Shield Ultimate Documentation
 site_description: Enterprise Deepfake Detection Platform
 site_author: BioShield Security Team
+site_url: https://docs.bioshield.secure-bank.internal
+
+repo_name: bioshield-ultimate
 repo_url: https://github.com/your-org/bioshield-ultimate
 
 theme:
@@ -12,24 +15,58 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.top
+    - navigation.expand
     - search.suggest
+    - search.highlight
     - content.code.copy
+    - content.code.annotate
 
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - admonition
   - pymdownx.details
+  - attr_list
+  - md_in_html
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
+  - Getting Started: getting_started.md
   - Architecture: architecture.md
-  - API Reference: api.md
-  - Deployment: deployment.md
-  - Operations: operations.md
-  - Security: security.md
+  - Deployment:
+    - Quick Start: deployment_quick.md
+    - Production: deployment_prod.md
+    - Kubernetes: deployment_k8s.md
+  - API Reference:
+    - Overview: api_overview.md
+    - Endpoints: api_endpoints.md
+    - Examples: api_examples.md
+  - Operations:
+    - Daily Tasks: operations_daily.md
+    - Monitoring: operations_monitoring.md
+    - Troubleshooting: troubleshooting.md
+  - Security:
+    - Overview: security_overview.md
+    - Compliance: security_compliance.md
+    - Audit: security_audit.md
+  - Integration:
+    - Banks: integration_banks.md
+    - Telecom: integration_telecom.md
+    - SIP/RTP: integration_sip.md
   - FAQ: faq.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org/bioshield-ultimate
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/company/bioshield
+
+copyright: Copyright &copy; 2026 Sovereign Bio-Shield Networks Ltd.
