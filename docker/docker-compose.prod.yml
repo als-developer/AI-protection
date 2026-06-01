@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  api:
+    image: bioshield/api:${TAG:-latest}
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=info
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+    networks:
+      - bioshield-net
+    restart: always
+
+  engine:
+    image: bioshield/engine:${TAG:-latest}
+    privileged: true
+    environment:
+      - CORE_AFFINITY_CORE=0
+      - CORE_REALTIME_PRIORITY=99
+    networks:
+      - bioshield-net
+    restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=bioshield
+      - POSTGRES_USER=bioshield
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - bioshield-net
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks:
+      - bioshield-net
+    restart: always
+
+networks:
+  bioshield-net:
+    driver: overlay
+    attachable: true
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
