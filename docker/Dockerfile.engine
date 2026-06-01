@@ -1,0 +1,55 @@
+# Stage 1: Build C++ engine
+FROM ubuntu:22.04 AS builder
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    g++-12 \
+    cmake \
+    libbpf-dev \
+    linux-tools-common \
+    linux-tools-generic \
+    clang \
+    llvm \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+# Copy source files
+COPY core/ .
+
+# Compile with aggressive optimizations
+RUN g++-12 -O3 -march=native -mavx512f -std=c++23 \
+    -pthread -fopenmp -flto \
+    -o bioshield_engine main_engine.cpp \
+    avx512_math.cpp lockfree_queue.cpp \
+    deepfake_detector.cpp hardware_affinity.cpp \
+    memory_pool.cpp ebpf_loader.cpp \
+    frequency_analyzer.cpp multi_channel_core.cpp \
+    -lstdc++ -lm
+
+# Stage 2: Runtime
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    libbpf1 \
+    libelf1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m -u 1000 bioshield
+
+WORKDIR /app
+
+# Copy binary
+COPY --from=builder /build/bioshield_engine /app/bioshield_engine
+COPY --from=builder /build/nic_xdp.o /app/nic_xdp.o
+
+# Set capabilities for eBPF
+RUN setcap 'cap_net_admin+ep' /app/bioshield_engine
+
+# Expose metrics port
+EXPOSE 9100
+
+USER bioshield
+
+ENTRYPOINT ["/app/bioshield_engine"]
