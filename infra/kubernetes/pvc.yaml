@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bioshield-postgres-pvc
+  namespace: bioshield-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: gp3
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bioshield-redis-pvc
+  namespace: bioshield-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: gp3
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bioshield-backup-pvc
+  namespace: bioshield-system
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: gp3
