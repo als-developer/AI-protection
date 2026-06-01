@@ -1,0 +1,31 @@
+FROM ubuntu:22.04 AS builder
+
+RUN apt-get update && apt-get install -y \
+    clang \
+    llvm \
+    libbpf-dev \
+    linux-tools-common \
+    linux-tools-generic \
+    make \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+COPY core/nic_xdp.c .
+
+# Compile eBPF program
+RUN clang -O2 -g -target bpf -c nic_xdp.c -o nic_xdp.o
+
+FROM alpine:3.19
+
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+COPY --from=builder /build/nic_xdp.o /app/nic_xdp.o
+COPY scripts/setup_ebpf.sh /app/setup_ebpf.sh
+
+RUN chmod +x /app/setup_ebpf.sh
+
+ENTRYPOINT ["/app/setup_ebpf.sh"]
