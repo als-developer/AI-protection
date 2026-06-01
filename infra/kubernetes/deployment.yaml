@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bioshield-core
+  name: bioshield-api
   namespace: bioshield-system
   labels:
     app: bioshield
-    tier: core
+    component: api
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: bioshield
-      tier: core
+      component: api
   template:
     metadata:
       labels:
         app: bioshield
-        tier: core
+        component: api
     spec:
       nodeSelector:
         node-type: compute-optimized
       containers:
-      - name: api-gateway
+      - name: api
         image: bioshield/api:latest
         imagePullPolicy: Always
         ports:
@@ -38,13 +38,15 @@ spec:
             secretKeyRef:
               name: bioshield-secrets
               key: database.url
+        - name: LOG_LEVEL
+          value: "info"
         resources:
           requests:
             cpu: "2"
-            memory: "4Gi"
+            memory: "2Gi"
           limits:
             cpu: "4"
-            memory: "8Gi"
+            memory: "4Gi"
         livenessProbe:
           httpGet:
             path: /v1/health/liveness
@@ -57,36 +59,6 @@ spec:
             port: 8000
           initialDelaySeconds: 10
           periodSeconds: 5
-        volumeMounts:
-        - name: engine-lib
-          mountPath: /usr/local/lib
-      - name: cpp-engine
-        image: bioshield/engine:latest
-        imagePullPolicy: Always
-        securityContext:
-          privileged: true
-        env:
-        - name: CORE_AFFINITY_CORE
-          value: "0"
-        - name: REALTIME_PRIORITY
-          value: "99"
-        resources:
-          requests:
-            cpu: "4"
-            memory: "2Gi"
-          limits:
-            cpu: "8"
-            memory: "4Gi"
-        volumeMounts:
-        - name: ebpf-programs
-          mountPath: /sys/fs/bpf
-          mountPropagation: Bidirectional
-        - name: engine-lib
-          mountPath: /usr/local/lib
-      volumes:
-      - name: ebpf-programs
-        hostPath:
-          path: /sys/fs/bpf
-          type: DirectoryOrCreate
-      - name: engine-lib
-        emptyDir: {}
+        envFrom:
+        - configMapRef:
+            name: bioshield-config
