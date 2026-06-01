@@ -1,41 +1,58 @@
--- Multi-channel telemetry table
-CREATE TABLE IF NOT EXISTS deepfake_channel_telemetry (
-    channel_telemetry_id BIGSERIAL PRIMARY KEY,
-    audit_id VARCHAR(50) NOT NULL REFERENCES deepfake_audit_logs(audit_id) ON DELETE CASCADE,
-    channel_index INTEGER NOT NULL,
-    calculated_variance NUMERIC(7,4) NOT NULL,
-    calculated_mean NUMERIC(10,6) NOT NULL,
-    zero_crossing_rate NUMERIC(7,4),
-    is_anomaly BOOLEAN DEFAULT FALSE,
-    logged_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Multi-channel audio analysis schema
+-- Version: 2.0
 
--- Indexes for fast lookups
-CREATE INDEX idx_channel_audit ON deepfake_channel_telemetry(audit_id);
-CREATE INDEX idx_channel_anomaly ON deepfake_channel_telemetry(is_anomaly) WHERE is_anomaly = TRUE;
+-- Create partitioned table for channel telemetry
+CREATE TABLE IF NOT EXISTS channel_telemetry_partitioned (
+    LIKE deepfake_channel_telemetry INCLUDING ALL
+) PARTITION BY RANGE (logged_at);
 
--- Stored procedure for variance calculation
-CREATE OR REPLACE FUNCTION calculate_risk_score(variance NUMERIC, mean NUMERIC)
-RETURNS NUMERIC AS $$
+-- Create monthly partitions (run monthly)
+DO $$
+DECLARE
+    start_date DATE;
+    end_date DATE;
+    partition_name TEXT;
 BEGIN
-    RETURN CASE
-        WHEN variance < 0.045 THEN 95 + (random() * 4)::NUMERIC
-        WHEN variance < 0.08 THEN 50 + (random() * 20)::NUMERIC
-        ELSE (random() * 10)::NUMERIC
-    END;
+    FOR i IN 0..12 LOOP
+        start_date := DATE_TRUNC('month', NOW() + (i || ' months')::INTERVAL)::DATE;
+        end_date := start_date + INTERVAL '1 month';
+        partition_name := 'channel_telemetry_' || TO_CHAR(start_date, 'YYYY_MM');
+        
+        EXECUTE format('
+            CREATE TABLE IF NOT EXISTS %I PARTITION OF channel_telemetry_partitioned
+            FOR VALUES FROM (%L) TO (%L)',
+            partition_name, start_date, end_date
+        );
+    END LOOP;
+END $$;
+
+-- Function to get multi-channel anomaly detection
+CREATE OR REPLACE FUNCTION detect_multi_channel_anomaly(
+    p_audit_id VARCHAR
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+    total_channels INTEGER;
+    anomaly_channels INTEGER;
+BEGIN
+    SELECT COUNT(*), COUNT(*) FILTER (WHERE is_anomaly = TRUE)
+    INTO total_channels, anomaly_channels
+    FROM deepfake_channel_telemetry
+    WHERE audit_id = p_audit_id;
+    
+    RETURN anomaly_channels > total_channels / 2;
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger to auto-calculate risk score
-CREATE OR REPLACE FUNCTION auto_calculate_fraud_risk()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.fraud_risk_score := calculate_risk_score(NEW.frequency_delta, 0);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_auto_risk_score
-    BEFORE INSERT ON deepfake_audit_logs
-    FOR EACH ROW
-    EXECUTE FUNCTION auto_calculate_fraud_risk();
+-- View for real-time channel metrics
+CREATE OR REPLACE VIEW v_channel_health AS
+SELECT 
+    DATE_TRUNC('minute', logged_at) AS minute,
+    channel_index,
+    AVG(calculated_variance) AS avg_variance,
+    AVG(anomaly_score) AS avg_anomaly_score,
+    COUNT(*) AS sample_count,
+    SUM(CASE WHEN is_anomaly THEN 1 ELSE 0 END) AS anomaly_count
+FROM deepfake_channel_telemetry
+WHERE logged_at >= NOW() - INTERVAL '1 hour'
+GROUP BY DATE_TRUNC('minute', logged_at), channel_index;
