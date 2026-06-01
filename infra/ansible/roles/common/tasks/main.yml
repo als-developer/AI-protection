@@ -1,0 +1,46 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install common packages
+  apt:
+    name:
+      - curl
+      - wget
+      - git
+      - vim
+      - htop
+      - net-tools
+      - tcpdump
+      - rsync
+      - unzip
+    state: present
+
+- name: Configure timezone
+  timezone:
+    name: UTC
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Configure /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: ".*{{ inventory_hostname }}$"
+    line: "127.0.1.1 {{ inventory_hostname }}"
+
+- name: Create admin user
+  user:
+    name: admin
+    groups: sudo
+    shell: /bin/bash
+    append: true
+
+- name: Copy SSH keys for admin
+  authorized_key:
+    user: admin
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    state: present
