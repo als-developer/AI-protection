@@ -1,0 +1,23 @@
+[Unit]
+Description=Sovereign Bio-Shield eBPF XDP Loader
+After=network.target
+Before=bioshield-engine.service
+Requires=network.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/bioshield
+EnvironmentFile=/opt/bioshield/config/.env.production
+ExecStart=/opt/bioshield/scripts/setup_ebpf.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+# Security
+NoNewPrivileges=no
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
