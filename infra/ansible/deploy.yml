@@ -1,0 +1,154 @@
+---
+- name: Deploy Sovereign Bio-Shield Ultimate
+  hosts: production
+  become: true
+  gather_facts: true
+  vars:
+    deploy_user: bioshield
+    deploy_group: bioshield
+    install_dir: /opt/bioshield
+    data_dir: /var/lib/bioshield
+    log_dir: /var/log/bioshield
+
+  pre_tasks:
+    - name: Create system groups and users
+      group:
+        name: "{{ deploy_group }}"
+        state: present
+        system: true
+      tags: [user, always]
+
+    - name: Create deploy user
+      user:
+        name: "{{ deploy_user }}"
+        groups: "{{ deploy_group }}"
+        shell: /bin/bash
+        create_home: true
+        system: true
+      tags: [user, always]
+
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_group }}"
+        mode: '0755'
+      loop:
+        - "{{ install_dir }}"
+        - "{{ data_dir }}"
+        - "{{ log_dir }}"
+      tags: [directories]
+
+  tasks:
+    - name: Install system dependencies
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+          - python3-pip
+          - python3-docker
+          - curl
+          - wget
+          - git
+          - build-essential
+          - linux-tools-common
+          - linux-tools-generic
+          - clang
+          - llvm
+          - libbpf-dev
+          - redis-tools
+          - postgresql-client
+        state: present
+        update_cache: true
+      tags: [dependencies]
+
+    - name: Start and enable Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+      tags: [docker]
+
+    - name: Add deploy user to docker group
+      user:
+        name: "{{ deploy_user }}"
+        groups: docker
+        append: true
+      tags: [docker]
+
+    - name: Copy application files
+      synchronize:
+        src: ../../
+        dest: "{{ install_dir }}"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=node_modules"
+          - "--exclude=.venv"
+      tags: [deploy]
+
+    - name: Copy systemd service files
+      copy:
+        src: "{{ item.src }}"
+        dest: "/etc/systemd/system/{{ item.dest }}"
+        mode: '0644'
+      loop:
+        - { src: "infra/systemd/bioshield-api.service", dest: "bioshield-api.service" }
+        - { src: "infra/systemd/bioshield-engine.service", dest: "bioshield-engine.service" }
+        - { src: "infra/systemd/bioshield-ebpf.service", dest: "bioshield-ebpf.service" }
+      tags: [systemd]
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: true
+      tags: [systemd]
+
+    - name: Start application services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop:
+        - bioshield-api
+        - bioshield-engine
+        - bioshield-ebpf
+      tags: [services]
+
+    - name: Configure kernel parameters for low latency
+      sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+      loop:
+        - { name: 'net.core.rmem_max', value: '134217728' }
+        - { name: 'net.core.wmem_max', value: '134217728' }
+        - { name: 'net.ipv4.tcp_rmem', value: '4096 87380 134217728' }
+        - { name: 'net.ipv4.tcp_wmem', value: '4096 65536 134217728' }
+        - { name: 'net.core.netdev_max_backlog', value: '250000' }
+        - { name: 'net.ipv4.tcp_low_latency', value: '1' }
+        - { name: 'kernel.numa_balancing', value: '0' }
+      tags: [kernel]
+
+  post_tasks:
+    - name: Verify service health
+      uri:
+        url: "http://localhost:8000/v1/health"
+        status_code: 200
+      register: health_check
+      retries: 30
+      delay: 2
+      until: health_check.status == 200
+      tags: [verify]
+
+    - name: Display deployment summary
+      debug:
+        msg: |
+          ========================================
+          Sovereign Bio-Shield Ultimate Deployed!
+          ========================================
+          API Endpoint: http://{{ ansible_default_ipv4.address }}:8000
+          Health Check: http://{{ ansible_default_ipv4.address }}:8000/v1/health
+          Metrics: http://{{ ansible_default_ipv4.address }}:8000/v1/metrics
+          ========================================
+      tags: [summary]
