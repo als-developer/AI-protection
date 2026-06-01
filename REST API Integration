@@ -1,0 +1,16 @@
+import requests
+
+API_URL = "https://api.bioshield.secure-bank.internal"
+API_KEY = "sk_live_your_key"
+
+def detect_deepfake(audio_samples):
+    response = requests.post(
+        f"{API_URL}/v1/audit-voice",
+        headers={"X-BioShield-Token": API_KEY},
+        json={
+            "bank_cluster_token": "your_bank",
+            "channel_identity": "call_center_01",
+            "frequency_amplitude_deltas": audio_samples
+        }
+    )
+    return response.json()
