@@ -1,0 +1,75 @@
+---
+- name: Initial node setup for BioShield
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: true
+        autoclean: true
+
+    - name: Install essential packages
+      apt:
+        name:
+          - htop
+          - nginx
+          - fail2ban
+          - ufw
+          - unattended-upgrades
+          - auditd
+          - rsyslog
+          - logrotate
+        state: present
+
+    - name: Configure firewall
+      ufw:
+        rule: "{{ item.rule }}"
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+      loop:
+        - { rule: 'allow', port: '22', proto: 'tcp' }
+        - { rule: 'allow', port: '8000', proto: 'tcp' }
+        - { rule: 'allow', port: '9090', proto: 'tcp' }
+        - { rule: 'allow', port: '3000', proto: 'tcp' }
+        - { rule: 'allow', port: '5432', proto: 'tcp' }
+        - { rule: 'allow', port: '6379', proto: 'tcp' }
+
+    - name: Enable fail2ban
+      systemd:
+        name: fail2ban
+        state: started
+        enabled: true
+
+    - name: Configure unattended upgrades
+      copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Download-Upgradeable-Packages "1";
+          APT::Periodic::AutocleanInterval "7";
+          APT::Periodic::Unattended-Upgrade "1";
+
+    - name: Set timezone to UTC
+      timezone:
+        name: UTC
+
+    - name: Configure logging
+      lineinfile:
+        path: /etc/rsyslog.conf
+        regexp: '^\$MaxMessageSize'
+        line: '$MaxMessageSize 64k'
+      notify: restart rsyslog
+
+  handlers:
+    - name: restart rsyslog
+      systemd:
+        name: rsyslog
+        state: restarted
