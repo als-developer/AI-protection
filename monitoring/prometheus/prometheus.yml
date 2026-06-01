@@ -1,0 +1,60 @@
+# Prometheus Configuration for BioShield Ultimate
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'bioshield-prod'
+    region: 'us-east-1'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - 'alerts.yml'
+  - 'recording_rules.yml'
+
+scrape_configs:
+  - job_name: 'bioshield-api'
+    scrape_interval: 5s
+    metrics_path: '/v1/metrics'
+    static_configs:
+      - targets: ['api.bioshield:8000']
+        labels:
+          service: 'api-gateway'
+          component: 'fastapi'
+
+  - job_name: 'bioshield-engine'
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['engine.bioshield:9100']
+        labels:
+          service: 'core-engine'
+          component: 'cpp'
+
+  - job_name: 'bioshield-ebpf'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['ebpf-exporter:9101']
+        labels:
+          service: 'ebpf'
+          component: 'kernel'
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'database'
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'cache'
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node'
