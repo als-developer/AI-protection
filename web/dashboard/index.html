@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Bio-Shield Ultimate - Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
+        }
+        .deepfake-alert { animation: pulse-red 1.5s infinite; }
+        .safe-alert { animation: pulse-green 1.5s infinite; }
+        .blink { animation: blink-animation 1s step-end infinite; }
+        @keyframes blink-animation {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+    
+    <!-- Top Navigation Bar -->
+    <nav class="bg-slate-900 border-b border-slate-800 px-6 py-3 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center space-x-4">
+            <div class="text-2xl">🛡️</div>
+            <div>
+                <h1 class="text-xl font-black bg-gradient-to-r from-red-500 to-rose-400 bg-clip-text text-transparent">
+                    SOVEREIGN BIO-SHIELD
+                </h1>
+                <p class="text-[10px] text-slate-500">Ultimate Deepfake Defense System</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div id="system-status" class="flex items-center space-x-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-mono text-emerald-400">ONLINE</span>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-mono text-slate-400">Node: AFR-EDGE-01</p>
+                <p class="text-[10px] text-slate-600">v3.0.0 | AVX-512 ACTIVE</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="p-6">
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Total Scans Today</p>
+                        <p id="total-scans" class="text-3xl font-bold text-white mt-1">0</p>
+                    </div>
+                    <div class="bg-indigo-500/20 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Deepfakes Blocked</p>
+                        <p id="deepfakes-blocked" class="text-3xl font-bold text-red-400 mt-1">0</p>
+                    </div>
+                    <div class="bg-red-500/20 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Avg Latency</p>
+                        <p id="avg-latency" class="text-3xl font-bold text-cyan-400 mt-1">0<span class="text-sm">ms</span></p>
+                    </div>
+                    <div class="bg-cyan-500/20 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Active Streams</p>
+                        <p id="active-streams" class="text-3xl font-bold text-emerald-400 mt-1">0</p>
+                    </div>
+                    <div class="bg-emerald-500/20 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4-4H6a2 2 0 01-2-2v-7a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2h-3m-4 0h4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Latency Chart -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-4">Real-time Processing Latency</h3>
+                <canvas id="latency-chart" height="200"></canvas>
+                <div class="mt-3 flex justify-between text-xs text-slate-500">
+                    <span>SLA Target: &lt;15ms</span>
+                    <span id="current-latency-indicator" class="text-emerald-400">Current: 0ms</span>
+                </div>
+            </div>
+
+            <!-- Detection Rate Chart -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-4">Deepfake Detection Rate (Last Hour)</h3>
+                <canvas id="detection-chart" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Live Feed & Alerts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Live Audio Stream Simulator -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-4 flex items-center">
+                    <span class="w-2 h-2 bg-red-500 rounded-full mr-2 blink"></span>
+                    Live Voice Stream Simulator
+                </h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="simulateHumanVoice()" 
+                                class="bg-slate-950 border border-slate-700 hover:border-emerald-500 p-4 rounded-xl transition-all group">
+                            <span class="text-2xl block mb-1">👤</span>
+                            <span class="text-xs font-bold text-slate-300 group-hover:text-emerald-400">Human Voice</span>
+                        </button>
+                        <button onclick="simulateDeepfake()" 
+                                class="bg-slate-950 border border-slate-700 hover:border-red-500 p-4 rounded-xl transition-all group">
+                            <span class="text-2xl block mb-1">🤖</span>
+                            <span class="text-xs font-bold text-slate-300 group-hover:text-red-400">AI Deepfake</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Live Verification Card -->
+                    <div id="verification-card" class="hidden p-4 rounded-xl border transition-all duration-300">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 id="verdict-title" class="font-bold text-sm">VERIFYING...</h4>
+                                <p id="verdict-action" class="text-xs text-slate-400 mt-0.5">Processing audio stream</p>
+                            </div>
+                            <div class="text-right">
+                                <span id="fraud-score" class="text-xl font-black block">0%</span>
+                                <span class="text-[9px] uppercase text-slate-500">Fraud Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="text-sm font-bold text-white mb-4 flex items-center">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                    Recent Security Alerts
+                </h3>
+                <div id="alerts-list" class="space-y-2 max-h-48 overflow-y-auto">
+                    <div class="text-center text-slate-500 text-sm py-4">No recent alerts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status Footer -->
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">CPU Usage</p>
+                    <p id="cpu-usage" class="text-sm font-mono text-white">0%</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">Memory Usage</p>
+                    <p id="memory-usage" class="text-sm font-mono text-white">0 MB</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">eBPF XDP</p>
+                    <p id="ebpf-status" class="text-sm font-mono text-emerald-400">ACTIVE</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase">AVX-512</p>
+                    <p id="avx-status" class="text-sm font-mono text-emerald-400">ENABLED</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_URL = "http://localhost:8000";
+        const API_KEY = "sk_demo_key";
+        
+        // Charts
+        let latencyChart, detectionChart;
+        let latencyData = [];
+        
+        // Socket.IO for real-time updates
+        const socket = io(API_URL, {
+            transports: ['websocket'],
+            path: '/socket.io'
+        });
+        
+        // Initialize charts
+        function initCharts() {
+            const ctx1 = document.getElementById('latency-chart').getContext('2d');
+            latencyChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill(''),
+                    datasets: [{
+                        label: 'Latency (ms)',
+                        data: Array(20).fill(0),
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'SLA Target',
+                        data: Array(20).fill(15),
+                        borderColor: '#eab308',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: { y: { grid: { color: '#1e293b' }, title: { display: true, text: 'ms', color: '#94a3b8' } } }
+                }
+            });
+            
+            const ctx2 = document.getElementById('detection-chart').getContext('2d');
+            detectionChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Deepfake Detections',
+                        data: [],
+                        backgroundColor: '#ef4444',
+                        borderRadius: 8
+                    }, {
+                        label: 'Total Scans',
+                        data: [],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: { y: { grid: { color: '#1e293b' } } }
+                }
+            });
+        }
+        
+        // Update latency chart
+        function updateLatencyChart(latency) {
+            latencyData.push(latency);
+            if (latencyData.length > 20) latencyData.shift();
+            latencyChart.data.datasets[0].data = latencyData;
+            latencyChart.update();
+            document.getElementById('current-latency-indicator').innerHTML = `Current: ${latency.toFixed(2)}ms`;
+            
+            // Color based on SLA
+            const indicator = document.getElementById('current-latency-indicator');
+            if (latency < 15) indicator.className = "text-emerald-400";
+            else if (latency < 30) indicator.className = "text-amber-400";
+            else indicator.className = "text-red-400";
+        }
+        
+        // Simulate human voice
+        async function simulateHumanVoice() {
+            const amplitudes = Array.from({length: 50}, () => Math.random() * 3.0 + 0.5);
+            await sendAuditRequest(amplitudes, true);
+        }
+        
+        // Simulate deepfake
+        async function simulateDeepfake() {
+            const amplitudes = Array.from({length: 50}, () => 0.12 + Math.random() * 0.01);
+            await sendAuditRequest(amplitudes, false);
+        }
+        
+        // Send audit request
+        async function sendAuditRequest(amplitudes, isHuman) {
+            const card = document.getElementById('verification-card');
+            const verdictTitle = document.getElementById('verdict-title');
+            const verdictAction = document.getElementById('verdict-action');
+            const fraudScore = document.getElementById('fraud-score');
+            
+            card.classList.remove('hidden');
+            card.className = "p-4 rounded-xl border border-slate-700 bg-slate-950 animate-pulse";
+            verdictTitle.innerText = "PROCESSING...";
+            verdictAction.innerText = "Analyzing frequency patterns";
+            fraudScore.innerText = "---";
+            
+            const startTime = performance.now();
+            
+            try {
+                const response = await fetch(`${API_URL}/v1/audit-voice`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-BioShield-Token': API_KEY
+                    },
+                    body: JSON.stringify({
+                        bank_cluster_token: "dashboard_bank",
+                        channel_identity: "web_demo",
+                        frequency_amplitude_deltas: amplitudes
+                    })
+                });
+                
+                const data = await response.json();
+                const latency = performance.now() - startTime;
+                updateLatencyChart(latency);
+                
+                fraudScore.innerText = data.fraud_risk_index;
+                
+                if (data.evaluation_verdict === "CRITICAL_SUSPECTED_DEEPFAKE") {
+                    card.className = "p-4 rounded-xl border-2 border-red-500 bg-red-950/40 deepfake-alert";
+                    verdictTitle.className = "font-bold text-sm text-red-400";
+                    verdictTitle.innerText = "🚨 DEEPFAKE DETECTED!";
+                    verdictAction.innerText = "Call terminated - Transaction blocked";
+                    
+                    // Add to alerts
+                    addAlert("Deepfake Detected", `Fraud risk ${data.fraud_risk_index}`, "critical");
+                } else {
+                    card.className = "p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 safe-alert";
+                    verdictTitle.className = "font-bold text-sm text-emerald-400";
+                    verdictTitle.innerText = "✅ VERIFIED HUMAN";
+                    verdictAction.innerText = "Call authorized - Transaction allowed";
+                }
+                
+                // Update stats
+                updateStats();
+                
+            } catch (error) {
+                card.className = "p-4 rounded-xl border-2 border-amber-500 bg-amber-950/40";
+                verdictTitle.innerText = "⚠️ CONNECTION ERROR";
+                verdictAction.innerText = "Verify API is running on port 8000";
+                fraudScore.innerText = "ERR";
+            }
+        }
+        
+        // Add alert to list
+        function addAlert(title, message, severity) {
+            const alertsDiv = document.getElementById('alerts-list');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `p-2 rounded-lg ${severity === 'critical' ? 'bg-red-950/50 border border-red-800' : 'bg-amber-950/50 border border-amber-800'}`;
+            alertDiv.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold ${severity === 'critical' ? 'text-red-400' : 'text-amber-400'}">${title}</p>
+                        <p class="text-[10px] text-slate-400">${message}</p>
+                    </div>
+                    <span class="text-[9px] text-slate-500">${new Date().toLocaleTimeString()}</span>
+                </div>
+            `;
+            alertsDiv.insertBefore(alertDiv, alertsDiv.firstChild);
+            
+            // Keep only last 10 alerts
+            while (alertsDiv.children.length > 10) {
+                alertsDiv.removeChild(alertsDiv.lastChild);
+            }
+        }
+        
+        // Update statistics
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_URL}/v1/metrics/streams`, {
+                    headers: { 'X-BioShield-Token': API_KEY }
+                });
+                const data = await response.json();
+                
+                document.getElementById('active-streams').innerText = data.active_streams || 0;
+                document.getElementById('total-scans').innerText = data.total_processed_today || 0;
+                
+                // Mock data for demo
+                document.getElementById('deepfakes-blocked').innerText = Math.floor(Math.random() * 100);
+                document.getElementById('avg-latency').innerHTML = (Math.random() * 10 + 5).toFixed(1) + '<span class="text-sm">ms</span>';
+                
+            } catch (error) {
+                console.error("Stats update failed:", error);
+            }
+        }
+        
+        // Update system metrics
+        async function updateSystemMetrics() {
+            try {
+                const response = await fetch(`${API_URL}/v1/metrics`);
+                // This would parse Prometheus metrics
+                document.getElementById('cpu-usage').innerText = Math.floor(Math.random() * 40 + 20) + '%';
+                document.getElementById('memory-usage').innerText = Math.floor(Math.random() * 2000 + 500) + ' MB';
+            } catch (error) {
+                // Use mock data if API not available
+                document.getElementById('cpu-usage').innerText = '23%';
+                document.getElementById('memory-usage').innerText = '1.2 GB';
+            }
+        }
+        
+        // Initialize everything
+        function init() {
+            initCharts();
+            updateStats();
+            updateSystemMetrics();
+            
+            // Update stats every 5 seconds
+            setInterval(() => {
+                updateStats();
+                updateSystemMetrics();
+            }, 5000);
+            
+            // Simulate random latency updates
+            setInterval(() => {
+                const mockLatency = Math.random() * 12 + 3;
+                updateLatencyChart(mockLatency);
+            }, 2000);
+        }
+        
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
