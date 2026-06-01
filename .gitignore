@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+var/log/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.rdb
+
+# Backups
+*.tar.gz
+*.gpg
+backups/
+var/backups/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Kubernetes
+*.kubeconfig
+kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Ansible
+*.retry
+
+# Docker
+*.pid
+
+# Production artifacts
+core/bioshield_engine
+core/*.o
+core/*.so
+monitoring/prometheus/exporters/ebpf_exporter
