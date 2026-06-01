@@ -1,0 +1,37 @@
+---
+- name: Install Prometheus node exporter
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz"
+    dest: /usr/local/bin/
+    remote_src: true
+    extra_opts: [--strip-components=1]
+
+- name: Configure node exporter service
+  copy:
+    dest: /etc/systemd/system/node_exporter.service
+    content: |
+      [Unit]
+      Description=Prometheus Node Exporter
+      After=network.target
+
+      [Service]
+      User=nobody
+      Group=nogroup
+      ExecStart=/usr/local/bin/node_exporter
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Start node exporter
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Configure Prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    mode: '0644'
+  notify: restart prometheus
