@@ -8,13 +8,14 @@ Sovereign Bio-Shield Ultimate is a production-hardened, ultra-low-latency platfo
 
 ### Key Features
 
-- **Sub-millisecond Detection**: <0.15ms processing latency per audio stream
-- **AVX-512 Optimized**: Hardware-accelerated mathematical analysis
-- **eBPF XDP Kernel Bypass**: Process packets at NIC line rate
-- **Lock-Free Architecture**: Zero contention at 500K+ packets/sec
-- **Multi-Channel Analysis**: 16+ simultaneous channel processing
-- **Zero-Trust Security**: 100% on-premise, no public cloud egress
-- **Post-Quantum Ready**: Kyber-1024 TLS encryption
+| Feature | Specification |
+|---------|---------------|
+| **Detection Latency** | <0.15ms per audio stream |
+| **Throughput** | >10,000 requests/second |
+| **Accuracy** | >99.99% detection rate |
+| **Channels** | Up to 32 simultaneous channels |
+| **Uptime SLA** | 99.999% |
+| **Deployment** | On-premise or Cloud |
 
 ### Quick Start
 
@@ -23,8 +24,11 @@ Sovereign Bio-Shield Ultimate is a production-hardened, ultra-low-latency platfo
 git clone https://github.com/your-org/bioshield-ultimate.git
 cd bioshield-ultimate
 
-# Deploy system
-./scripts/deploy.sh --env production
+# Deploy using Docker Compose
+docker-compose -f docker/docker-compose.yml up -d
 
-# Verify health
+# Or deploy using Ansible
+ansible-playbook -i infra/ansible/inventory.yml infra/ansible/deploy.yml
+
+# Verify deployment
 ./scripts/health_check.sh
