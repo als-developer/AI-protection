@@ -1,0 +1,32 @@
+# Development overrides - NOT for production
+version: '3.8'
+
+services:
+  api:
+    volumes:
+      - ./api:/app/api
+      - ./config:/app/config
+    environment:
+      - DEBUG=true
+      - LOG_LEVEL=debug
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=dev_password
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  prometheus:
+    ports:
+      - "9090:9090"
+
+  grafana:
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
