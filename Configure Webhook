@@ -1,0 +1,9 @@
+// Receive real-time alerts
+app.post('/webhook/bioshield', (req, res) => {
+  const { verdict, fraud_risk_index, channel_identity } = req.body;
+  if (verdict === 'CRITICAL_SUSPECTED_DEEPFAKE') {
+    // Block the transaction
+    blockTransaction(channel_identity);
+  }
+  res.sendStatus(200);
+});
