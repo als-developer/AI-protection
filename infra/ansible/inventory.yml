@@ -1,0 +1,30 @@
+all:
+  children:
+    production:
+      hosts:
+        bioshield-node-01:
+          ansible_host: 10.140.10.12
+          ansible_user: root
+          node_type: api
+        bioshield-node-02:
+          ansible_host: 10.140.10.13
+          ansible_user: root
+          node_type: engine
+        bioshield-node-03:
+          ansible_host: 10.140.10.14
+          ansible_user: root
+          node_type: database
+    staging:
+      hosts:
+        bioshield-staging-01:
+          ansible_host: 10.150.20.12
+          ansible_user: root
+          node_type: all
+    monitoring:
+      hosts:
+        bioshield-monitor-01:
+          ansible_host: 10.140.10.100
+          ansible_user: root
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
