@@ -1,0 +1,48 @@
+---
+- name: Create BioShield directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /opt/bioshield
+    - /opt/bioshield/config
+    - /opt/bioshield/scripts
+    - /var/lib/bioshield
+    - /var/log/bioshield
+
+- name: Copy application files
+  synchronize:
+    src: "../../../"
+    dest: "/opt/bioshield/"
+    rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=__pycache__"
+      - "--exclude=*.pyc"
+
+- name: Install Python dependencies
+  pip:
+    requirements: "/opt/bioshield/requirements.txt"
+    virtualenv: "/opt/bioshield/venv"
+    virtualenv_command: python3 -m venv
+
+- name: Copy systemd service files
+  copy:
+    src: "infra/systemd/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    mode: '0644'
+  loop:
+    - bioshield-api.service
+    - bioshield-engine.service
+    - bioshield-ebpf.service
+
+- name: Start and enable services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  loop:
+    - bioshield-ebpf
+    - bioshield-engine
+    - bioshield-api
