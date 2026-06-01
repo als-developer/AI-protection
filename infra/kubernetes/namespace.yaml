@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bioshield-system
+  labels:
+    name: bioshield-system
+    environment: production
+    pod-security.kubernetes.io/enforce: privileged
