@@ -1,0 +1,7 @@
+; extensions.conf
+exten => _X.,1,Set(SOUND_FILE=/tmp/audio_${UNIQUEID}.raw)
+exten => _X.,n,Monitor(wav,${SOUND_FILE},m)
+exten => _X.,n,Set(RESULT=${SHELL(curl -X POST https://api.bioshield/v1/audit-voice -H "X-BioShield-Token: ${API_KEY}" -d @${SOUND_FILE})})
+exten => _X.,n,GotoIf($["${RESULT}" = "DEEPFAKE"]?block,1)
+exten => _X.,n,Dial(SIP/${EXTEN})
+exten => _X.,n(block),Hangup()
