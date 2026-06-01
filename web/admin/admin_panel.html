@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="p-8">
+        <h1 class="text-2xl font-bold mb-6">🔧 Admin Control Panel</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- API Key Management -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">🔑 API Key Management</h2>
+                <div class="space-y-3">
+                    <input type="text" id="client-name" placeholder="Client Name" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm">
+                    <input type="email" id="client-email" placeholder="Email" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm">
+                    <button onclick="generateApiKey()" class="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg text-sm font-bold">
+                        Generate API Key
+                    </button>
+                </div>
+                <div id="new-key-display" class="mt-4 hidden p-3 bg-slate-950 border border-emerald-800 rounded-lg">
+                    <p class="text-xs text-emerald-400 font-mono break-all"></p>
+                    <p class="text-[10px] text-slate-500 mt-1">Save this key - it won't be shown again!</p>
+                </div>
+            </div>
+            
+            <!-- Rate Limit Configuration -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">⚡ Rate Limit Settings</h2>
+                <div class="space-y-3">
+                    <label class="text-xs text-slate-400">Requests per minute</label>
+                    <input type="number" id="rate-limit" value="10000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm">
+                    <label class="text-xs text-slate-400">Burst capacity</label>
+                    <input type="number" id="burst-capacity" value="15000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-sm">
+                    <button onclick="updateRateLimit()" class="w-full bg-cyan-600 hover:bg-cyan-700 py-2 rounded-lg text-sm font-bold">
+                        Apply Changes
+                    </button>
+                </div>
+            </div>
+            
+            <!-- System Controls -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">🎮 System Controls</h2>
+                <div class="space-y-3">
+                    <button onclick="restartEngine()" class="w-full bg-amber-600 hover:bg-amber-700 py-2 rounded-lg text-sm font-bold">
+                        Restart Core Engine
+                    </button>
+                    <button onclick="clearCache()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded-lg text-sm font-bold">
+                        Clear Cache
+                    </button>
+                    <button onclick="emergencyStop()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg text-sm font-bold">
+                        🚨 Emergency Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Client List -->
+        <div class="mt-8 bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h2 class="text-lg font-bold mb-4">👥 Active Clients</h2>
+            <div id="client-list" class="space-y-2">
+                <div class="text-center text-slate-500 py-4">Loading clients...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = "http://localhost:8000";
+        const ADMIN_KEY = "sk_admin_master_2026";
+        
+        async function generateApiKey() {
+            const name = document.getElementById('client-name').value;
+            const email = document.getElementById('client-email').value;
+            
+            if (!name || !email) {
+                alert("Please enter client name and email");
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/v1/admin/clients`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Token': ADMIN_KEY
+                    },
+                    body: JSON.stringify({
+                        client_name: name,
+                        contact_email: email,
+                        tier: "enterprise"
+                    })
+                });
+                
+                const data = await response.json();
+                const displayDiv = document.getElementById('new-key-display');
+                displayDiv.querySelector('p:first-child').innerText = data.api_key;
+                displayDiv.classList.remove('hidden');
+                
+                loadClients();
+                
+            } catch (error) {
+                alert("Error generating API key: " + error.message);
+            }
+        }
+        
+        async function loadClients() {
+            try {
+                const response = await fetch(`${API_URL}/v1/admin/clients`, {
+                    headers: { 'X-Admin-Token': ADMIN_KEY }
+                });
+                const clients = await response.json();
+                
+                const container = document.getElementById('client-list');
+                container.innerHTML = clients.map(c => `
+                    <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                        <div>
+                            <p class="font-bold text-sm">${c.name}</p>
+                            <p class="text-xs text-slate-400">${c.email}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-mono text-emerald-400">${c.api_key_prefix}...${c.api_key_suffix}</p>
+                            <p class="text-[10px] text-slate-500">Balance: $${c.balance}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error("Failed to load clients:", error);
+            }
+        }
+        
+        async function updateRateLimit() {
+            const rateLimit = document.getElementById('rate-limit').value;
+            const burstCapacity = document.getElementById('burst-capacity').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/v1/admin/rate-limit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Token': ADMIN_KEY
+                    },
+                    body: JSON.stringify({
+                        default_rate: parseInt(rateLimit),
+                        burst_capacity: parseInt(burstCapacity)
+                    })
+                });
+                
+                alert("Rate limit updated successfully!");
+            } catch (error) {
+                alert("Error updating rate limit: " + error.message);
+            }
+        }
+        
+        async function restartEngine() {
+            if (confirm("Restart core engine? This may cause brief disruption.")) {
+                try {
+                    await fetch(`${API_URL}/v1/admin/restart-engine`, {
+                        method: 'POST',
+                        headers: { 'X-Admin-Token': ADMIN_KEY }
+                    });
+                    alert("Engine restart initiated");
+                } catch (error) {
+                    alert("Error restarting engine: " + error.message);
+                }
+            }
+        }
+        
+        async function clearCache() {
+            try {
+                await fetch(`${API_URL}/v1/admin/clear-cache`, {
+                    method: 'POST',
+                    headers: { 'X-Admin-Token': ADMIN_KEY }
+                });
+                alert("Cache cleared successfully");
+            } catch (error) {
+                alert("Error clearing cache: " + error.message);
+            }
+        }
+        
+        async function emergencyStop() {
+            if (confirm("EMERGENCY STOP - This will block all traffic. Are you sure?")) {
+                try {
+                    await fetch(`${API_URL}/v1/admin/emergency-stop`, {
+                        method: 'POST',
+                        headers: { 'X-Admin-Token': ADMIN_KEY },
+                        body: JSON.stringify({ reason: "Manual admin action" })
+                    });
+                    alert("Emergency stop activated - all traffic blocked");
+                } catch (error) {
+                    alert("Error activating emergency stop: " + error.message);
+                }
+            }
+        }
+        
+        // Load clients on page load
+        loadClients();
+    </script>
+</body>
+</html>
