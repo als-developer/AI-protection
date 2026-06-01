@@ -1,0 +1,21 @@
+groups:
+  - name: bioshield_recording_rules
+    interval: 30s
+    rules:
+      - record: bioshield:deepfake_rate:5m
+        expr: rate(bioshield_deepfake_detections_total[5m])
+
+      - record: bioshield:request_rate:1m
+        expr: rate(bioshield_requests_total[1m])
+
+      - record: bioshield:error_rate:5m
+        expr: rate(bioshield_requests_total{status=~"5.."}[5m]) / rate(bioshield_requests_total[5m])
+
+      - record: bioshield:p99_latency:5m
+        expr: histogram_quantile(0.99, sum(rate(bioshield_request_latency_seconds_bucket[5m])) by (le, method, endpoint))
+
+      - record: bioshield:blocked_ip_rate:5m
+        expr: rate(bioshield_blocked_ips_total[5m])
+
+      - record: bioshield:active_streams:1m
+        expr: avg_over_time(bioshield_active_streams[1m])
