@@ -1,0 +1,41 @@
+[Unit]
+Description=Sovereign Bio-Shield API Gateway
+After=network.target docker.service postgresql.service redis.service
+Requires=docker.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=simple
+User=bioshield
+Group=bioshield
+WorkingDirectory=/opt/bioshield
+EnvironmentFile=/opt/bioshield/config/.env.production
+ExecStartPre=/usr/bin/docker pull bioshield/api:latest
+ExecStart=/usr/bin/docker-compose -f /opt/bioshield/docker/docker-compose.prod.yml up api
+ExecStop=/usr/bin/docker-compose -f /opt/bioshield/docker/docker-compose.prod.yml down
+ExecReload=/usr/bin/docker-compose -f /opt/bioshield/docker/docker-compose.prod.yml restart api
+Restart=always
+RestartSec=5s
+TimeoutStartSec=60s
+TimeoutStopSec=30s
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=no
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/bioshield /var/log/bioshield
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+SystemCallFilter=~@privileged
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=32768
+MemoryMax=8G
+CPUQuota=400%
+
+[Install]
+WantedBy=multi-user.target
