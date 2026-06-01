@@ -1,0 +1,114 @@
+# Sovereign Bio-Shield Ultimate - Production Environment
+# DO NOT COMMIT THIS FILE TO VERSION CONTROL
+
+# =====================================================
+# API Gateway Configuration
+# =====================================================
+APP_NAME=Sovereign Bio-Shield Ultimate
+APP_VERSION=3.0.0
+DEBUG=false
+WORKERS_COUNT=8
+HOST=0.0.0.0
+PORT=8000
+
+# =====================================================
+# Database Configuration
+# =====================================================
+DATABASE_URL=postgresql://bioshield_admin:VAULTED_SECURE_PASS_2026@postgres.bioshield-system.svc.cluster.local:5432/bioshield
+DB_POOL_SIZE=50
+DB_MAX_OVERFLOW=100
+DB_POOL_TIMEOUT=30
+
+# =====================================================
+# Redis Cache Configuration
+# =====================================================
+REDIS_HOST=redis.bioshield-system.svc.cluster.local
+REDIS_PORT=6379
+REDIS_PASSWORD=VAULTED_REDIS_PASS_2026
+REDIS_DB=0
+REDIS_POOL_SIZE=50
+
+# =====================================================
+# Core Engine Configuration
+# =====================================================
+CORE_ENGINE_LIB=/usr/local/lib/libbioshield.so
+CORE_AFFINITY_CORE=0
+CORE_REALTIME_PRIORITY=99
+CORE_MEMORY_POOL_MB=512
+CORE_EBPF_INTERFACE=eth0
+
+# =====================================================
+# Rate Limiting
+# =====================================================
+RATE_LIMIT_DEFAULT=10000
+RATE_LIMIT_BURST=15000
+RATE_LIMIT_WINDOW_SECONDS=60
+
+# =====================================================
+# Billing Configuration
+# =====================================================
+BILLING_RATE_PER_SCAN=0.10
+BILLING_CURRENCY=USD
+STRIPE_API_KEY=sk_live_VAULTED_STRIPE_KEY
+STRIPE_WEBHOOK_SECRET=whsec_VAULTED_WEBHOOK_SECRET
+
+# =====================================================
+# Security Configuration
+# =====================================================
+JWT_SECRET=VAULTED_JWT_SECRET_32_BYTES_MINIMUM
+JWT_ALGORITHM=HS256
+JWT_EXPIRY_HOURS=24
+API_KEY_PREFIX=sk_live_
+ADMIN_API_KEY=sk_admin_VAULTED_ADMIN_KEY
+
+# =====================================================
+# TLS/SSL Configuration
+# =====================================================
+TLS_CERT_PATH=/etc/ssl/certs/bioshield.crt
+TLS_KEY_PATH=/etc/ssl/private/bioshield.key
+TLS_CA_PATH=/etc/ssl/certs/ca.crt
+
+# =====================================================
+# Observability
+# =====================================================
+PROMETHEUS_ENABLED=true
+PROMETHEUS_PORT=9090
+GRAFANA_ENABLED=true
+GRAFANA_PORT=3000
+LOKI_ENABLED=true
+LOKI_URL=http://loki.bioshield-system.svc.cluster.local:3100
+
+# =====================================================
+# Logging Configuration
+# =====================================================
+LOG_LEVEL=info
+LOG_FORMAT=json
+LOG_OUTPUT=stdout
+LOG_FILE=/var/log/bioshield/api.log
+
+# =====================================================
+# Alerting Configuration
+# =====================================================
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/VAULTED/SLACK/WEBHOOK
+PAGERDUTY_INTEGRATION_KEY=VAULTED_PAGERDUTY_KEY
+ALERT_CRITICAL_THRESHOLD=95
+ALERT_WARNING_THRESHOLD=80
+
+# =====================================================
+# Backup Configuration
+# =====================================================
+BACKUP_ENABLED=true
+BACKUP_SCHEDULE="0 2 * * *"
+BACKUP_RETENTION_DAYS=30
+BACKUP_ENCRYPTION_KEY=VAULTED_GPG_KEY_ID
+BACKUP_S3_BUCKET=bioshield-backups-prod
+BACKUP_S3_REGION=us-east-1
+
+# =====================================================
+# Compliance Configuration
+# =====================================================
+GDPR_ENABLED=true
+HIPAA_ENABLED=true
+SOX_ENABLED=true
+DATA_RETENTION_DAYS=90
+AUDIT_LOG_ENABLED=true
