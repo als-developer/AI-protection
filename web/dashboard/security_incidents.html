@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Security Incidents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .incident-critical { border-left: 4px solid #ef4444; }
+        .incident-high { border-left: 4px solid #f59e0b; }
+        .incident-medium { border-left: 4px solid #eab308; }
+        .incident-low { border-left: 4px solid #3b82f6; }
+        .timeline-dot { position: relative; }
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold">🚨 Security Incidents</h1>
+                <p class="text-sm text-slate-400">Real-time incident monitoring and response</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs">Real-time monitoring active</span>
+            </div>
+        </div>
+
+        <!-- Incident Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-900 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-red-400">3</p>
+                <p class="text-xs text-slate-400">Critical</p>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-amber-400">7</p>
+                <p class="text-xs text-slate-400">High</p>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-yellow-400">12</p>
+                <p class="text-xs text-slate-400">Medium</p>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-4 text-center">
+                <p class="text-2xl font-bold text-blue-400">24</p>
+                <p class="text-xs text-slate-400">Low</p>
+            </div>
+        </div>
+
+        <!-- Timeline View -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h3 class="font-bold mb-6">📅 Incident Timeline</h3>
+            <div class="space-y-6">
+                <!-- Incident 1 - Critical -->
+                <div class="incident-critical pl-4 timeline-dot relative">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-[10px] font-bold">CRITICAL</span>
+                                <span class="text-xs text-slate-500">2 minutes ago</span>
+                            </div>
+                            <h4 class="font-bold mt-1">Massive Deepfake Attack Wave</h4>
+                            <p class="text-sm text-slate-400 mt-1">Multiple channels detected with AI-generated voice patterns</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-slate-500">Source IP: 185.142.53.xxx</span>
+                                <span class="text-xs text-slate-500">Affected: 12 channels</span>
+                                <span class="text-xs text-red-400">Risk: 98.7%</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-xs transition-all">Investigate</button>
+                            <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs transition-all">Block All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Incident 2 - High -->
+                <div class="incident-high pl-4 timeline-dot relative">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-[10px] font-bold">HIGH</span>
+                                <span class="text-xs text-slate-500">15 minutes ago</span>
+                            </div>
+                            <h4 class="font-bold mt-1">Suspicious Pattern Detected</h4>
+                            <p class="text-sm text-slate-400 mt-1">Unusual frequency patterns from regional call center</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-slate-500">Source: crdb_hq_main</span>
+                                <span class="text-xs text-slate-500">Channel: sip_trunk_04</span>
+                                <span class="text-xs text-amber-400">Risk: 84.2%</span>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-xs transition-all">Review</button>
+                    </div>
+                </div>
+
+                <!-- Incident 3 - Medium -->
+                <div class="incident-medium pl-4 timeline-dot relative">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-[10px] font-bold">MEDIUM</span>
+                                <span class="text-xs text-slate-500">45 minutes ago</span>
+                            </div>
+                            <h4 class="font-bold mt-1">Rate Limit Exceeded</h4>
+                            <p class="text-sm text-slate-400 mt-1">Client exceeded rate limit threshold multiple times</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-slate-500">Client: enterprise_bank_03</span>
+                                <span class="text-xs text-slate-500">Rate: 12,500 req/min</span>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-xs transition-all">Adjust Limits</button>
+                    </div>
+                </div>
+
+                <!-- Incident 4 - Low -->
+                <div class="incident-low pl-4 timeline-dot relative">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-[10px] font-bold">LOW</span>
+                                <span class="text-xs text-slate-500">2 hours ago</span>
+                            </div>
+                            <h4 class="font-bold mt-1">Configuration Change Detected</h4>
+                            <p class="text-sm text-slate-400 mt-1">Rate limit configuration was modified</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-slate-500">User: admin@bioshield</span>
+                                <span class="text-xs text-slate-500">Change: rate_limit 10000 → 15000</span>
+                            </div>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-xs transition-all">Audit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Actions -->
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h3 class="font-bold mb-4">⚡ Quick Response Actions</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button onclick="blockAllFromIP()" class="bg-red-600/20 border border-red-800 hover:bg-red-600/30 py-2 rounded-lg text-sm transition-all">
+                    Block IP Range
+                </button>
+                <button onclick="enableStrictMode()" class="bg-amber-600/20 border border-amber-800 hover:bg-amber-600/30 py-2 rounded-lg text-sm transition-all">
+                    Enable Strict Mode
+                </button>
+                <button onclick="clearCache()" class="bg-blue-600/20 border border-blue-800 hover:bg-blue-600/30 py-2 rounded-lg text-sm transition-all">
+                    Clear Cache
+                </button>
+                <button onclick="generateReport()" class="bg-emerald-600/20 border border-emerald-800 hover:bg-emerald-600/30 py-2 rounded-lg text-sm transition-all">
+                    Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function blockAllFromIP() {
+            if(confirm('Block all traffic from suspicious IP ranges?')) {
+                alert('Blocking initiated. IPs will be blocked at eBPF level.');
+            }
+        }
+        function enableStrictMode() {
+            if(confirm('Enable strict security mode? This may increase false positives.')) {
+                alert('Strict mode enabled.');
+            }
+        }
+        function clearCache() {
+            if(confirm('Clear all cached data?')) {
+                alert('Cache cleared.');
+            }
+        }
+        function generateReport() {
+            alert('Generating incident report...');
+        }
+    </script>
+</body>
+</html>
