@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield Security Seal</title>
+    <style>
+        .security-seal {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .security-seal:hover {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        .seal-icon { font-size: 32px; margin-bottom: 6px; }
+        .seal-title { font-size: 14px; font-weight: bold; color: #ef4444; letter-spacing: 1px; }
+        .seal-text { font-size: 9px; color: #64748b; margin-top: 4px; }
+        .seal-date { font-size: 8px; color: #334155; margin-top: 4px; }
+    </style>
+</head>
+<body style="background: transparent; padding: 20px; display: flex; justify-content: center;">
+    <div class="security-seal" onclick="showVerification()">
+        <div class="seal-icon">🛡️</div>
+        <div class="seal-title">BIOSHIELD VERIFIED</div>
+        <div class="seal-text">Deepfake Protected</div>
+        <div class="seal-date">2026</div>
+    </div>
+
+    <div id="verification" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: #0f172a; border: 2px solid #ef4444; border-radius: 16px; max-width: 380px; width: 90%; padding: 32px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+            <h3 style="color: white; font-size: 20px; margin-bottom: 8px;">Verification Complete</h3>
+            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 24px;">This site is actively protected by BioShield Ultimate deepfake detection system.</p>
+            <div style="border-top: 1px solid #1e293b; padding-top: 16px; margin-top: 8px;">
+                <p style="color: #64748b; font-size: 11px;">Certificate ID: BS-2026-05-31-001</p>
+                <button onclick="closeVerification()" style="background: #ef4444; border: none; color: white; padding: 8px 24px; border-radius: 8px; margin-top: 12px; cursor: pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showVerification() {
+            document.getElementById('verification').style.display = 'flex';
+        }
+        function closeVerification() {
+            document.getElementById('verification').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
