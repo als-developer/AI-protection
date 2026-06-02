@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - API Status</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="text-center mb-8"><h1 class="text-3xl font-bold">📡 API Status Monitor</h1><p class="text-slate-400 mt-2">Real-time API health and performance</p></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-center"><div class="text-5xl mb-3">✅</div><h3 class="font-bold text-emerald-400">API Gateway</h3><p class="text-sm text-slate-400">Operational</p><p class="text-xs text-slate-500 mt-2">99.999% uptime</p></div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 text-center"><div class="text-5xl mb-3">✅</div><h3 class="font-bold text-emerald-400">WebSocket</h3><p class="text-sm text-slate-400">Operational</p><p class="text-xs text-slate-500 mt-2">Active connections: 1,247</p></div>
+        </div>
+
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6"><h3 class="font-bold mb-3">📈 Recent API Metrics</h3>
+            <div class="space-y-2"><div class="flex justify-between text-sm"><span>Requests (last hour)</span><span>12,847</span></div><div class="flex justify-between text-sm"><span>Avg Latency</span><span>8.7ms</span></div><div class="flex justify-between text-sm"><span>Error Rate</span><span class="text-emerald-400">0.01%</span></div><div class="flex justify-between text-sm"><span>Rate Limit Hits</span><span>127</span></div></div>
+        </div>
+
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6"><h3 class="font-bold mb-3">⏱️ Response Time (Last 24h)</h3><div class="h-32 bg-slate-800 rounded-lg flex items-end space-x-1 p-2"><div class="bg-emerald-500 w-full" style="height: 20%"></div><div class="bg-emerald-500 w-full" style="height: 30%"></div><div class="bg-emerald-500 w-full" style="height: 45%"></div><div class="bg-emerald-500 w-full" style="height: 60%"></div><div class="bg-emerald-500 w-full" style="height: 55%"></div><div class="bg-emerald-500 w-full" style="height: 70%"></div><div class="bg-emerald-500 w-full" style="height: 65%"></div><div class="bg-emerald-500 w-full" style="height: 80%"></div><div class="bg-emerald-500 w-full" style="height: 75%"></div><div class="bg-emerald-500 w-full" style="height: 85%"></div><div class="bg-emerald-500 w-full" style="height: 82%"></div><div class="bg-emerald-500 w-full" style="height: 88%"></div></div><p class="text-center text-xs text-slate-500 mt-2">All times within SLA (&lt;15ms)</p></div>
+    </div>
+</body>
+</html>
