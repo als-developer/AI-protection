@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bioshield-api
+  labels:
+    app: bioshield
+    component: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bioshield
+      component: api
+  template:
+    metadata:
+      labels:
+        app: bioshield
+        component: api
+    spec:
+      nodeSelector:
+        node-type: compute-optimized
+      containers:
+      - name: api
+        image: bioshield/api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: bioshield-config
+              key: redis.host
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: bioshield-secrets
+              key: database.url
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+          limits:
+            cpu: "4"
+            memory: "8Gi"
+        livenessProbe:
+          httpGet:
+            path: /v1/health/liveness
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /v1/health/readiness
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bioshield-api
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: bioshield
+    component: api
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bioshield-config
+data:
+  redis.host: "redis.bioshield-system.svc.cluster.local"
+  redis.port: "6379"
+  log.level: "info"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bioshield-secrets
+type: Opaque
+data:
+  database.url: ""
+  redis.password: ""
