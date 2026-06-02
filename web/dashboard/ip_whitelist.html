@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - IP Whitelist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🌐 IP Whitelist Management</h1>
+                <p class="text-sm text-slate-400">Manage trusted IP addresses</p>
+            </div>
+            <button onclick="addIP()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">+ Add IP</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Whitelist Table -->
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-800/50">
+                            <tr><th class="text-left p-3 text-xs text-slate-400">IP Address</th><th class="text-left p-3 text-xs text-slate-400">Added By</th><th class="text-left p-3 text-xs text-slate-400">Date</th><th class="text-left p-3 text-xs text-slate-400">Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-t border-slate-800"><td class="p-3 font-mono">10.140.10.12</td><td class="p-3">admin@bioshield</td><td class="p-3">2026-05-30</td><td class="p-3"><button class="text-red-400 text-xs">Remove</button></td></tr>
+                            <tr class="border-t border-slate-800"><td class="p-3 font-mono">192.168.1.0/24</td><td class="p-3">security@bank</td><td class="p-3">2026-05-28</td><td class="p-3"><button class="text-red-400 text-xs">Remove</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add IP Form -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="font-bold mb-4">➕ Add IP Address</h3>
+                <div class="space-y-3">
+                    <input type="text" placeholder="IP Address or CIDR (e.g., 192.168.1.0/24)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                    <textarea placeholder="Description (optional)" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm"></textarea>
+                    <button class="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg text-sm font-bold">Add to Whitelist</button>
+                </div>
+                <div class="mt-4 p-3 bg-amber-950/30 border border-amber-800 rounded-lg">
+                    <p class="text-xs text-amber-400">⚠️ IPs in whitelist bypass rate limiting</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>function addIP() { alert("Add IP address form"); }</script>
+</body>
+</html>
