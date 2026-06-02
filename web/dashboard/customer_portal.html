@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Customer Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold">Welcome back, National Bank of Tanzania</h1>
+                    <p class="text-indigo-200 mt-1">Your security dashboard</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-indigo-200">Account Balance</p>
+                    <p class="text-2xl font-bold">$1,247.50</p>
+                    <p class="text-xs text-indigo-200">Valid until June 30, 2026</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <p class="text-xs text-slate-400">Total Scans (This Month)</p>
+                <p class="text-2xl font-bold text-white">12,847</p>
+                <p class="text-xs text-emerald-400 mt-1">↑ 18% vs last month</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <p class="text-xs text-slate-400">Threats Blocked</p>
+                <p class="text-2xl font-bold text-red-400">347</p>
+                <p class="text-xs text-emerald-400 mt-1">100% detection rate</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <p class="text-xs text-slate-400">Avg Response Time</p>
+                <p class="text-2xl font-bold text-cyan-400">8.7ms</p>
+                <p class="text-xs text-emerald-400 mt-1">Well within SLA</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">Daily Usage Trend</h3>
+                <canvas id="usage-chart" height="200"></canvas>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">Recent Activity</h3>
+                <div class="space-y-3 max-h-52 overflow-y-auto">
+                    <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                        <span class="text-xs">Deepfake Detected - Channel 4</span>
+                        <span class="text-xs text-slate-500">2 min ago</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                        <span class="text-xs">Scan Complete - 1,247 requests</span>
+                        <span class="text-xs text-slate-500">1 hour ago</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                        <span class="text-xs">API Key Rotated</span>
+                        <span class="text-xs text-slate-500">1 day ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Keys -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="text-sm font-bold mb-4">🔑 Active API Keys</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center p-3 bg-slate-800/30 rounded">
+                    <div>
+                        <p class="font-mono text-sm">sk_live_xxxxxxxx...xxxx</p>
+                        <p class="text-xs text-slate-500">Created: May 15, 2026</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="text-xs text-amber-400">Rotate</button>
+                        <button class="text-xs text-red-400">Revoke</button>
+                    </div>
+                </div>
+            </div>
+            <button class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg text-sm font-bold">
+                + Generate New API Key
+            </button>
+        </div>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('usage-chart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{ label: 'Scans', data: [3200, 4100, 3800, 1747], borderColor: '#10b981', tension: 0.4, fill: false }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+        });
+    </script>
+</body>
+</html>
