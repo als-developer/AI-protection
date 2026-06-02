@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Code Examples</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold">💻 Code Examples</h1>
+            <p class="text-slate-400 mt-2">Quick start integration guides</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex border-b border-slate-800 mb-6">
+            <button onclick="showTab('python')" id="tab-python" class="px-4 py-2 text-sm font-medium text-emerald-400 border-b-2 border-emerald-400">Python</button>
+            <button onclick="showTab('javascript')" id="tab-javascript" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white">JavaScript</button>
+            <button onclick="showTab('curl')" id="tab-curl" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white">cURL</button>
+            <button onclick="showTab('go')" id="tab-go" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white">Go</button>
+        </div>
+
+        <!-- Python Example -->
+        <div id="python-content" class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800/50 p-3">
+                <span class="text-sm font-mono text-emerald-400">python detect_deepfake.py</span>
+            </div>
+            <pre><code class="language-python">import requests
+import json
+
+API_URL = "https://api.bioshield.secure-bank.internal/v1"
+API_KEY = "sk_live_your_api_key"
+
+def detect_deepfake(audio_samples):
+    """Detect deepfake in voice stream"""
+    
+    payload = {
+        "bank_cluster_token": "your_bank_id",
+        "channel_identity": "call_center_01",
+        "frequency_amplitude_deltas": audio_samples,
+        "metadata": {
+            "caller_id": "+255712345678",
+            "timestamp": "2026-06-01T10:00:00Z"
+        }
+    }
+    
+    headers = {
+        "X-BioShield-Token": API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(
+        f"{API_URL}/audit-voice",
+        json=payload,
+        headers=headers
+    )
+    
+    if response.status_code == 200:
+        result = response.json()
+        if result["evaluation_verdict"] == "CRITICAL_SUSPECTED_DEEPFAKE":
+            print(f"🚨 Deepfake detected! Risk: {result['fraud_risk_index']}")
+            return "BLOCK"
+        else:
+            print(f"✅ Human verified. Risk: {result['fraud_risk_index']}")
+            return "ALLOW"
+    else:
+        print(f"Error: {response.status_code}")
+        return "ERROR"
+
+# Example usage
+sample_audio = [0.12, 0.12, 0.11, 0.12, 0.12]  # AI clone pattern
+action = detect_deepfake(sample_audio)
+print(f"Action: {action}")</code></pre>
+        </div>
+
+        <!-- JavaScript Example -->
+        <div id="javascript-content" class="hidden bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800/50 p-3">
+                <span class="text-sm font-mono text-yellow-400">detectDeepfake.js</span>
+            </div>
+            <pre><code class="language-javascript">const API_URL = "https://api.bioshield.secure-bank.internal/v1";
+const API_KEY = "sk_live_your_api_key";
+
+async function detectDeepfake(audioSamples) {
+    const payload = {
+        bank_cluster_token: "your_bank_id",
+        channel_identity: "call_center_01",
+        frequency_amplitude_deltas: audioSamples,
+        metadata: {
+            caller_id: "+255712345678",
+            timestamp: new Date().toISOString()
+        }
+    };
+
+    const response = await fetch(`${API_URL}/audit-voice`, {
+        method: "POST",
+        headers: {
+            "X-BioShield-Token": API_KEY,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    
+    if (result.evaluation_verdict === "CRITICAL_SUSPECTED_DEEPFAKE") {
+        console.log(`🚨 Deepfake detected! Risk: ${result.fraud_risk_index}`);
+        return "BLOCK";
+    } else {
+        console.log(`✅ Human verified. Risk: ${result.fraud_risk_index}`);
+        return "ALLOW";
+    }
+}
+
+// Example
+const sampleAudio = [0.12, 0.12, 0.11, 0.12];
+detectDeepfake(sampleAudio).then(action => console.log(`Action: ${action}`));</code></pre>
+        </div>
+
+        <!-- cURL Example -->
+        <div id="curl-content" class="hidden bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800/50 p-3">
+                <span class="text-sm font-mono text-green-400">curl command</span>
+            </div>
+            <pre><code class="language-bash"># Deepfake detection request
+curl -X POST https://api.bioshield.secure-bank.internal/v1/audit-voice \
+  -H "X-BioShield-Token: sk_live_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bank_cluster_token": "crdb_hq_main",
+    "channel_identity": "sip_trunk_01",
+    "frequency_amplitude_deltas": [0.12, 0.12, 0.11, 0.12]
+  }'
+
+# Health check
+curl https://api.bioshield.secure-bank.internal/v1/health
+
+# Check rate limits
+curl -I https://api.bioshield.secure-bank.internal/v1/audit-voice \
+  -H "X-BioShield-Token: sk_live_your_api_key"</code></pre>
+        </div>
+
+        <!-- Go Example -->
+        <div id="go-content" class="hidden bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-800/50 p-3">
+                <span class="text-sm font-mono text-blue-400">main.go</span>
+            </div>
+            <pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+const apiURL = "https://api.bioshield.secure-bank.internal/v1"
+const apiKey = "sk_live_your_api_key"
+
+type Payload struct {
+    BankClusterToken   string    `json:"bank_cluster_token"`
+    ChannelIdentity    string    `json:"channel_identity"`
+    FrequencyDeltas    []float64 `json:"frequency_amplitude_deltas"`
+}
+
+type Response struct {
+    SecurityToken     string `json:"security_token"`
+    EvaluationVerdict string `json:"evaluation_verdict"`
+    FraudRiskIndex    string `json:"fraud_risk_index"`
+    FirewallAction    string `json:"firewall_action"`
+}
+
+func detectDeepfake(samples []float64) string {
+    payload := Payload{
+        BankClusterToken: "your_bank_id",
+        ChannelIdentity:  "call_center_01",
+        FrequencyDeltas:  samples,
+    }
+    
+    jsonData, _ := json.Marshal(payload)
+    
+    req, _ := http.NewRequest("POST", apiURL+"/audit-voice", bytes.NewBuffer(jsonData))
+    req.Header.Set("X-BioShield-Token", apiKey)
+    req.Header.Set("Content-Type", "application/json")
+    
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return "ERROR"
+    }
+    defer resp.Body.Close()
+    
+    var result Response
+    json.NewDecoder(resp.Body).Decode(&result)
+    
+    if result.EvaluationVerdict == "CRITICAL_SUSPECTED_DEEPFAKE" {
+        fmt.Printf("🚨 Deepfake detected! Risk: %s\n", result.FraudRiskIndex)
+        return "BLOCK"
+    }
+    fmt.Printf("✅ Human verified. Risk: %s\n", result.FraudRiskIndex)
+    return "ALLOW"
+}
+
+func main() {
+    samples := []float64{0.12, 0.12, 0.11, 0.12}
+    action := detectDeepfake(samples)
+    fmt.Printf("Action: %s\n", action)
+}</code></pre>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            // Hide all content
+            document.getElementById('python-content').classList.add('hidden');
+            document.getElementById('javascript-content').classList.add('hidden');
+            document.getElementById('curl-content').classList.add('hidden');
+            document.getElementById('go-content').classList.add('hidden');
+            
+            // Show selected
+            document.getElementById(`${tab}-content`).classList.remove('hidden');
+            
+            // Update tab styles
+            const tabs = ['python', 'javascript', 'curl', 'go'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.className = "px-4 py-2 text-sm font-medium text-emerald-400 border-b-2 border-emerald-400";
+                } else {
+                    btn.className = "px-4 py-2 text-sm font-medium text-slate-400 hover:text-white";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
