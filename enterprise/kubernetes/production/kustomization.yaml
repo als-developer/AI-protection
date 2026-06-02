@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: bioshield-system
+
+resources:
+  - ../base
+  - namespace.yaml
+  - ingress-prod.yaml
+  - hpa-prod.yaml
+
+patchesStrategicMerge:
+  - patch-replicas.yaml
+  - patch-resources.yaml
+
+configMapGenerator:
+  - name: bioshield-config-prod
+    behavior: merge
+    literals:
+      - LOG_LEVEL=info
+      - ENVIRONMENT=production
+      - REDIS_HOST=redis.primary.bioshield.internal
+      - DATABASE_POOL_SIZE=100
+
+secretGenerator:
+  - name: bioshield-secrets-prod
+    behavior: merge
+    literals:
+      - DATABASE_URL=postgresql://bioshield:${DB_PASSWORD}@postgres-primary:5432/bioshield
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+
+images:
+  - name: bioshield/api
+    newTag: 3.0.0-prod
+  - name: bioshield/engine
+    newTag: 3.0.0-prod
+
+replicas:
+  - name: bioshield-api
+    count: 10
+  - name: bioshield-engine
+    count: 5
+
+patches:
+  - target:
+      kind: Deployment
+      name: bioshield-api
+    patch: |
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "4"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "8Gi"
