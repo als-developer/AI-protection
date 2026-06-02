@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield Widget - Installation Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="text-center mb-12">
+            <div class="text-5xl mb-4">📦</div>
+            <h1 class="text-3xl font-bold">Widget Installation Guide</h1>
+            <p class="text-slate-400 mt-2">Add BioShield security to any website in minutes</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4">🚀 Quick Installation</h2>
+            <p class="text-sm text-slate-400 mb-3">Copy and paste this code just before the closing <code>&lt;/body&gt;</code> tag:</p>
+            <pre><code class="language-html">&lt;!-- BioShield Security Widget --&gt;
+&lt;script src="https://widget.bioshield.secure-bank.internal/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    BioShieldWidget.init({
+        apiKey: 'YOUR_API_KEY_HERE',
+        position: 'bottom-right',
+        theme: 'dark'
+    });
+&lt;/script&gt;</code></pre>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="font-bold mb-3">⚙️ Configuration Options</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-cyan-400">apiKey</span><span class="text-slate-400">Your BioShield API key</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-cyan-400">position</span><span class="text-slate-400">bottom-right, bottom-left, top-right, top-left</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-cyan-400">theme</span><span class="text-slate-400">dark, light, auto</span></div>
+                    <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-cyan-400">autoDetect</span><span class="text-slate-400">true/false</span></div>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="font-bold mb-3">🎨 Custom Styling</h3>
+                <pre><code class="language-css">.bioshield-widget {
+    --primary-color: #ef4444;
+    --bg-color: #0f172a;
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="mt-8 p-4 bg-emerald-950/30 border border-emerald-800 rounded-lg text-center">
+            <p class="text-sm text-emerald-400">✅ Try the live demo: <a href="widget_demo.html" class="underline">Open Demo Page</a></p>
+        </div>
+    </div>
+</body>
+</html>
