@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions - BioShield Ultimate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AdYZjwcxNYqpWCglcoqt4cv0ESkJ-G3RChAAuuET&vault=true&intent=subscription"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">Subscription Plans</h1>
+            <p class="text-slate-400 text-lg">Save more with monthly or yearly subscriptions</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <!-- Monthly -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h3 class="text-xl font-bold mb-2">Monthly</h3>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$49</span>
+                    <span class="text-slate-400">/month</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>10,000 credits/month</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Cancel anytime</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Email support</li>
+                </ul>
+                <button onclick="subscribe('monthly')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition-all">Subscribe</button>
+            </div>
+
+            <!-- Yearly (Best Value) -->
+            <div class="bg-gradient-to-b from-emerald-900/30 to-slate-900 border-2 border-emerald-500 rounded-2xl p-6 relative">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-white px-3 py-0.5 rounded-full text-xs font-bold">BEST VALUE</div>
+                <h3 class="text-xl font-bold mb-2">Yearly</h3>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$499</span>
+                    <span class="text-slate-400">/year</span>
+                    <p class="text-xs text-emerald-400 mt-1">Save $89 vs monthly</p>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>120,000 credits/year</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Cancel anytime</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Priority support</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>2 months free</li>
+                </ul>
+                <button onclick="subscribe('yearly')" class="w-full bg-emerald-600 hover:bg-emerald-700 py-2 rounded-lg transition-all font-bold">Subscribe</button>
+            </div>
+
+            <!-- Enterprise -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h3 class="text-xl font-bold mb-2">Enterprise</h3>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">Custom</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Custom credit allocation</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Dedicated support</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>SLA guarantee</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>On-premise option</li>
+                </ul>
+                <button onclick="contactSales()" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition-all">Contact Sales</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function subscribe(plan) {
+            alert(`Starting subscription for ${plan} plan. Redirecting to PayPal...`);
+            // In production, create PayPal subscription
+        }
+        
+        function contactSales() {
+            window.location.href = 'mailto:sales@bioshield.secure-bank.internal';
+        }
+    </script>
+</body>
+</html>
