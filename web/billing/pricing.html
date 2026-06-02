@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - BioShield Ultimate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+            <p class="text-slate-400 text-lg">Pay as you go or subscribe for savings</p>
+        </div>
+
+        <!-- Pricing Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Starter -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500 transition-all">
+                <h3 class="text-xl font-bold mb-2">Starter</h3>
+                <p class="text-slate-400 text-sm mb-4">For small businesses</p>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$50</span>
+                    <span class="text-slate-400">/one-time</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>1,000 API credits</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Up to 1,000 scans</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Email support</li>
+                </ul>
+                <button onclick="checkout('starter')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition-all">Buy Credits</button>
+            </div>
+
+            <!-- Professional (Popular) -->
+            <div class="bg-gradient-to-b from-emerald-900/30 to-slate-900 border-2 border-emerald-500 rounded-2xl p-6 relative">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-white px-3 py-0.5 rounded-full text-xs font-bold">POPULAR</div>
+                <h3 class="text-xl font-bold mb-2">Professional</h3>
+                <p class="text-slate-400 text-sm mb-4">For growing businesses</p>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$200</span>
+                    <span class="text-slate-400">/one-time</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>5,000 API credits</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Up to 5,000 scans</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Priority support</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Save 20%</li>
+                </ul>
+                <button onclick="checkout('professional')" class="w-full bg-emerald-600 hover:bg-emerald-700 py-2 rounded-lg transition-all font-bold">Buy Credits</button>
+            </div>
+
+            <!-- Business -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500 transition-all">
+                <h3 class="text-xl font-bold mb-2">Business</h3>
+                <p class="text-slate-400 text-sm mb-4">For enterprises</p>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$450</span>
+                    <span class="text-slate-400">/one-time</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>12,000 API credits</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Up to 12,000 scans</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>24/7 support</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Save 25%</li>
+                </ul>
+                <button onclick="checkout('business')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition-all">Buy Credits</button>
+            </div>
+
+            <!-- Enterprise -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500 transition-all">
+                <h3 class="text-xl font-bold mb-2">Enterprise</h3>
+                <p class="text-slate-400 text-sm mb-4">For large organizations</p>
+                <div class="mb-4">
+                    <span class="text-3xl font-bold">$1,000</span>
+                    <span class="text-slate-400">/one-time</span>
+                </div>
+                <ul class="space-y-2 text-sm mb-6">
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>30,000 API credits</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Up to 30,000 scans</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Dedicated account manager</li>
+                    <li class="flex items-center"><span class="text-emerald-400 mr-2">✓</span>Save 30%</li>
+                </ul>
+                <button onclick="checkout('enterprise')" class="w-full bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition-all">Buy Credits</button>
+            </div>
+        </div>
+
+        <!-- Subscription Option -->
+        <div class="mt-12 text-center">
+            <p class="text-slate-400">Need recurring credits? <a href="/billing/subscriptions.html" class="text-emerald-400 hover:underline">View subscription plans →</a></p>
+        </div>
+    </div>
+
+    <script>
+        function checkout(packageId) {
+            window.location.href = `/billing/checkout.html?package=${packageId}`;
+        }
+    </script>
+</body>
+</html>
