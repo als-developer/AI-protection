@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - System Health</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">💚 System Health Monitor</h1>
+                <p class="text-sm text-slate-400">Infrastructure health and performance metrics</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-xs">All systems operational</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                <p class="text-xs text-slate-400">API Gateway</p>
+                <div class="flex items-center justify-center mt-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                    <span class="text-sm">Healthy</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">99.999% uptime</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                <p class="text-xs text-slate-400">Core Engine</p>
+                <div class="flex items-center justify-center mt-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                    <span class="text-sm">Healthy</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">0.12ms avg</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                <p class="text-xs text-slate-400">Database</p>
+                <div class="flex items-center justify-center mt-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                    <span class="text-sm">Healthy</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">42 connections</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+                <p class="text-xs text-slate-400">eBPF XDP</p>
+                <div class="flex items-center justify-center mt-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                    <span class="text-sm">Active</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">12.5K pps</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">📈 Resource Usage</h3>
+                <canvas id="resource-chart" height="200"></canvas>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">📊 Service Status</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>API Gateway</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="bg-emerald-500 rounded-full h-2" style="width: 100%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Core Engine</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="bg-emerald-500 rounded-full h-2" style="width: 100%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Database</span>
+                            <span>98%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="bg-emerald-500 rounded-full h-2" style="width: 98%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Redis Cache</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="bg-emerald-500 rounded-full h-2" style="width: 95%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('resource-chart'), {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                datasets: [
+                    { label: 'CPU', data: Array.from({length: 24}, () => Math.random() * 40 + 20), borderColor: '#ef4444', tension: 0.4, fill: false },
+                    { label: 'Memory', data: Array.from({length: 24}, () => Math.random() * 30 + 15), borderColor: '#3b82f6', tension: 0.4, fill: false },
+                    { label: 'Network', data: Array.from({length: 24}, () => Math.random() * 50 + 10), borderColor: '#10b981', tension: 0.4, fill: false }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+        });
+    </script>
+</body>
+</html>
