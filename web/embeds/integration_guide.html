@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Integration Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="text-center mb-12">
+            <div class="text-6xl mb-4">🔌</div>
+            <h1 class="text-3xl font-bold">Integration Guide</h1>
+            <p class="text-slate-400 mt-2">Complete guide to integrating BioShield with your application</p>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">📋 Prerequisites</h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-300">
+                    <li>BioShield API key from admin panel</li>
+                    <li>Python 3.11+ or Node.js 18+ for SDK users</li>
+                    <li>Network access to https://api.bioshield.secure-bank.internal</li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">🐍 Python Integration</h2>
+                <pre class="bg-slate-950 p-3 rounded-lg overflow-x-auto text-xs"><code>pip install bioshield-sdk
+
+from bioshield import BioShieldClient
+
+client = BioShieldClient(api_key="sk_live_xxx")
+result = client.audit_voice(
+    bank_cluster_token="your_bank",
+    channel_identity="call_center",
+    frequency_deltas=[0.12, 0.12, 0.11]
+)
+print(result.verdict)  # "VERIFIED_HUMAN_AUTHENTIC" or "CRITICAL_SUSPECTED_DEEPFAKE"</code></pre>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">📘 JavaScript/Node.js Integration</h2>
+                <pre class="bg-slate-950 p-3 rounded-lg overflow-x-auto text-xs"><code>npm install bioshield-sdk
+
+const { BioShieldClient } = require('bioshield-sdk');
+const client = new BioShieldClient('sk_live_xxx');
+const result = await client.auditVoice({
+    bankClusterToken: 'your_bank',
+    channelIdentity: 'call_center',
+    frequencyAmplitudeDeltas: [0.12, 0.12, 0.11]
+});
+console.log(result.evaluationVerdict);</code></pre>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h2 class="text-lg font-bold mb-4">☕ Java Integration</h2>
+                <pre class="bg-slate-950 p-3 rounded-lg overflow-x-auto text-xs"><code>// Add dependency to pom.xml
+&lt;dependency&gt;
+    &lt;groupId&gt;com.bioshield&lt;/groupId&gt;
+    &lt;artifactId&gt;bioshield-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+BioShieldClient client = new BioShieldClient("sk_live_xxx");
+AuditResponse result = client.auditVoice(AuditRequest.builder()
+    .bankClusterToken("your_bank")
+    .channelIdentity("call_center")
+    .frequencyAmplitudeDeltas(Arrays.asList(0.12, 0.12, 0.11))
+    .build());
+System.out.println(result.getEvaluationVerdict());</code></pre>
+            </div>
+
+            <div class="bg-emerald-950/30 border border-emerald-800 rounded-xl p-6 text-center">
+                <p class="text-sm text-emerald-400">Need help? Contact support@bioshield.secure-bank.internal</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
