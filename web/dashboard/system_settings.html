@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - System Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <div class="flex justify-between items-center mb-6">
+            <div><h1 class="text-2xl font-bold">⚙️ System Settings</h1><p class="text-sm text-slate-400">Configure system parameters</p></div>
+            <button onclick="saveSettings()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">Save Changes</button>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h3 class="font-bold mb-4">🎯 Detection Settings</h3>
+                <div class="space-y-3"><div><label class="block text-sm mb-1">Detection Sensitivity</label><input type="range" min="0" max="100" value="95" class="w-full"><span class="text-xs text-cyan-400">High (95%)</span></div>
+                <div><label class="flex items-center space-x-2"><input type="checkbox" checked class="rounded"><span class="text-sm">Enable Ensemble Voting (Multi-Channel)</span></label></div></div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h3 class="font-bold mb-4">⏱️ Rate Limiting</h3>
+                <div class="grid grid-cols-2 gap-3"><div><label class="block text-sm mb-1">Default Rate (req/min)</label><input type="number" value="10000" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2"></div>
+                <div><label class="block text-sm mb-1">Burst Capacity</label><input type="number" value="15000" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2"></div></div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><h3 class="font-bold mb-4">📊 Data Retention</h3>
+                <div><label class="block text-sm mb-1">Retention Period (days)</label><input type="number" value="90" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>function saveSettings() { alert("Settings saved successfully!"); }</script>
+</body>
+</html>
