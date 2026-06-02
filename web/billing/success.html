@@ -20,4 +20,25 @@
             <div id="transaction-details" class="space-y-2 text-sm">
                 <div class="flex justify-between"><span class="text-slate-400">Order ID:</span><span id="order-id" class="font-mono">--</span></div>
                 <div class="flex justify-between"><span class="text-slate-400">Amount:</span><span id="amount" class="text-emerald-400">--</span></div>
-                <div class="flex justify-between"><span class="text-slate
+                <div class="flex justify-between"><span class="text-slate-400">Status:</span><span class="text-emerald-400">COMPLETED</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">Date:</span><span id="date">--</span></div>
+            </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/dashboard/index.html" class="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-xl font-bold transition-all">Go to Dashboard</a>
+            <a href="/billing/checkout.html" class="border border-slate-700 hover:bg-slate-800 px-6 py-3 rounded-xl font-bold transition-all">Buy More Credits</a>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order_id');
+        const amount = urlParams.get('amount');
+        
+        document.getElementById('order-id').innerText = orderId || 'N/A';
+        document.getElementById('amount').innerText = amount ? `$${parseFloat(amount).toFixed(2)}` : 'N/A';
+        document.getElementById('date').innerText = new Date().toLocaleString();
+    </script>
+</body>
+</html>
