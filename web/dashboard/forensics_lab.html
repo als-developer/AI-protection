@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Audio Forensics Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🔬 Audio Forensics Lab</h1>
+                <p class="text-sm text-slate-400">Waveform analysis & deepfake detection</p>
+            </div>
+            <button onclick="analyzeSample()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-all">
+                Analyze Sample
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Waveform Visualization -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">📊 Waveform Analysis</h3>
+                <canvas id="waveform-chart" height="250"></canvas>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <button onclick="loadHumanWave()" class="bg-emerald-600/20 border border-emerald-800 py-2 rounded-lg text-sm">👤 Load Human Voice</button>
+                    <button onclick="loadDeepfakeWave()" class="bg-red-600/20 border border-red-800 py-2 rounded-lg text-sm">🤖 Load AI Clone</button>
+                </div>
+            </div>
+
+            <!-- Spectrogram -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-4">🌊 Spectrogram</h3>
+                <canvas id="spectrogram" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- Analysis Results -->
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="text-sm font-bold mb-4">📋 Analysis Results</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <p class="text-xs text-slate-400">Variance Score</p>
+                    <p id="variance-score" class="text-xl font-bold text-cyan-400">0.0123</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-slate-400">Zero-Crossing Rate</p>
+                    <p id="zcr" class="text-xl font-bold text-cyan-400">0.0234</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-slate-400">Spectral Centroid</p>
+                    <p id="spectral" class="text-xl font-bold text-cyan-400">1250 Hz</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-slate-400">Verdict</p>
+                    <p id="verdict" class="text-xl font-bold text-red-400">DEEPFAKE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let waveformChart;
+        
+        function initWaveformChart(data) {
+            const ctx = document.getElementById('waveform-chart').getContext('2d');
+            if (waveformChart) waveformChart.destroy();
+            waveformChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: data.length}, (_, i) => i),
+                    datasets: [{
+                        label: 'Amplitude',
+                        data: data,
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                        tension: 0.1,
+                        fill: true,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#1e293b' } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function loadHumanWave() {
+            const data = Array.from({length: 200}, () => Math.sin(Math.random() * Math.PI * 2) * (Math.random() * 0.8 + 0.2));
+            initWaveformChart(data);
+            document.getElementById('variance-score').innerText = '0.4521';
+            document.getElementById('zcr').innerText = '0.2345';
+            document.getElementById('spectral').innerText = '2150 Hz';
+            document.getElementById('verdict').innerHTML = '<span class="text-emerald-400">HUMAN</span>';
+            drawSpectrogram(true);
+        }
+
+        function loadDeepfakeWave() {
+            const data = Array.from({length: 200}, () => 0.12 + Math.sin(Math.random() * Math.PI * 2) * 0.01);
+            initWaveformChart(data);
+            document.getElementById('variance-score').innerText = '0.0123';
+            document.getElementById('zcr').innerText = '0.0234';
+            document.getElementById('spectral').innerText = '1250 Hz';
+            document.getElementById('verdict').innerHTML = '<span class="text-red-400">DEEPFAKE</span>';
+            drawSpectrogram(false);
+        }
+
+        function drawSpectrogram(isHuman) {
+            const canvas = document.getElementById('spectrogram');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = 500;
+            const height = canvas.height = 200;
+            
+            if (isHuman) {
+                for (let i = 0; i < 100; i++) {
+                    const x = i * 5;
+                    for (let j = 0; j < 100; j++) {
+                        const intensity = Math.random() * 255;
+                        ctx.fillStyle = `rgb(${intensity}, ${intensity * 0.5}, ${intensity * 0.2})`;
+                        ctx.fillRect(x, j * 2, 4, 2);
+                    }
+                }
+            } else {
+                for (let i = 0; i < 100; i++) {
+                    const x = i * 5;
+                    const intensity = 80 + Math.sin(i * 0.5) * 40;
+                    for (let j = 0; j < 100; j++) {
+                        ctx.fillStyle = `rgb(${intensity}, ${intensity * 0.3}, ${intensity * 0.3})`;
+                        ctx.fillRect(x, j * 2, 4, 2);
+                    }
+                }
+            }
+        }
+
+        function analyzeSample() {
+            loadDeepfakeWave();
+        }
+
+        loadDeepfakeWave();
+    </script>
+</body>
+</html>
