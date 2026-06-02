@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Attack Simulation Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold">🎯 Attack Simulation Console</h1>
+            <p class="text-slate-400 mt-2">Test system defenses with simulated threats</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Simulation Controls -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold mb-4">⚙️ Simulation Parameters</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Attack Type</label>
+                        <select id="attack-type" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2">
+                            <option value="deepfake">Deepfake Voice Attack</option>
+                            <option value="rate-limit">Rate Limit Flood</option>
+                            <option value="ddos">DDoS Simulation</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Intensity (requests/sec)</label>
+                        <input type="range" id="intensity" min="1" max="1000" value="100" class="w-full">
+                        <span id="intensity-val" class="text-xs text-cyan-400">100 req/s</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Duration (seconds)</label>
+                        <input type="number" id="duration" value="30" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2">
+                    </div>
+                    <button onclick="startSimulation()" class="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg font-bold transition-all">
+                        ▶ Start Simulation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Simulation Results -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-lg font-bold mb-4">📊 Simulation Results</h3>
+                <div id="sim-results" class="space-y-3">
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm">Requests Sent</span>
+                            <span id="requests-sent" class="font-mono text-emerald-400">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm">Blocks Triggered</span>
+                            <span id="blocks-triggered" class="font-mono text-red-400">0</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm">Avg Response Time</span>
+                            <span id="avg-time" class="font-mono text-cyan-400">0ms</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm">Success Rate</span>
+                            <span id="success-rate" class="font-mono text-emerald-400">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Log -->
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="p-3 border-b border-slate-800 bg-slate-800/30">
+                <h3 class="font-bold">📝 Live Simulation Log</h3>
+            </div>
+            <div id="sim-log" class="p-3 h-48 overflow-y-auto font-mono text-xs space-y-1">
+                <div class="text-slate-500">Ready to start simulation...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let simulationInterval = null;
+        let requests = 0;
+        let blocks = 0;
+        let totalTime = 0;
+
+        document.getElementById('intensity').addEventListener('input', function() {
+            document.getElementById('intensity-val').innerText = this.value + ' req/s';
+        });
+
+        function addLog(message, type = 'info') {
+            const logDiv = document.getElementById('sim-log');
+            const colors = { info: 'text-slate-400', success: 'text-emerald-400', warning: 'text-amber-400', error: 'text-red-400' };
+            const logEntry = document.createElement('div');
+            logEntry.className = colors[type];
+            logEntry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function startSimulation() {
+            if (simulationInterval) clearInterval(simulationInterval);
+            
+            requests = 0;
+            blocks = 0;
+            totalTime = 0;
+            
+            document.getElementById('requests-sent').innerText = '0';
+            document.getElementById('blocks-triggered').innerText = '0';
+            document.getElementById('avg-time').innerText = '0ms';
+            document.getElementById('success-rate').innerText = '0%';
+            document.getElementById('sim-log').innerHTML = '';
+            
+            const intensity = parseInt(document.getElementById('intensity').value);
+            const duration = parseInt(document.getElementById('duration').value);
+            const attackType = document.getElementById('attack-type').value;
+            
+            addLog(`Starting ${attackType} simulation with ${intensity} req/s for ${duration}s`, 'info');
+            
+            const interval = 1000 / intensity;
+            const endTime = Date.now() + duration * 1000;
+            
+            simulationInterval = setInterval(() => {
+                if (Date.now() > endTime) {
+                    clearInterval(simulationInterval);
+                    addLog(`Simulation completed. ${requests} requests, ${blocks} blocked.`, 'success');
+                    return;
+                }
+                
+                requests++;
+                const start = performance.now();
+                
+                setTimeout(() => {
+                    const latency = performance.now() - start;
+                    totalTime += latency;
+                    
+                    const isBlocked = Math.random() < 0.3;
+                    if (isBlocked) blocks++;
+                    
+                    document.getElementById('requests-sent').innerText = requests;
+                    document.getElementById('blocks-triggered').innerText = blocks;
+                    document.getElementById('avg-time').innerText = (totalTime / requests).toFixed(2) + 'ms';
+                    document.getElementById('success-rate').innerText = ((1 - blocks/requests) * 100).toFixed(1) + '%';
+                    
+                    if (isBlocked) {
+                        addLog(`Request ${requests} BLOCKED - Deepfake pattern detected`, 'error');
+                    } else {
+                        addLog(`Request ${requests} ALLOWED - Human verified`, 'success');
+                    }
+                }, 10);
+            }, interval);
+        }
+    </script>
+</body>
+</html>
