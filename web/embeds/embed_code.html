@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield Widget - Embed Security on Your Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="text-5xl mb-4">🛡️</div>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-red-500 to-rose-400 bg-clip-text text-transparent">
+                BioShield Security Widget
+            </h1>
+            <p class="text-slate-400 mt-2">Protect your website visitors with real-time deepfake detection</p>
+        </div>
+        
+        <!-- Preview -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4">📱 Live Preview</h2>
+            <div class="bg-slate-950 rounded-xl p-8 relative min-h-[200px]">
+                <!-- Simulated widget preview -->
+                <div class="fixed bottom-4 right-4 z-50" style="position: relative; bottom: auto; right: auto; display: inline-block;">
+                    <div style="background: #0f172a; border-radius: 16px; border: 1px solid #1e293b; width: 320px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                        <div style="padding: 16px; border-bottom: 1px solid #1e293b; background: #1e293b;">
+                            <div style="display: flex; align-items: center;">
+                                <span style="font-size: 18px;">🛡️</span>
+                                <span style="font-weight: bold; margin-left: 8px; color: white;">BioShield Security</span>
+                            </div>
+                        </div>
+                        <div style="padding: 16px;">
+                            <div style="background: #05966920; border: 1px solid #059669; border-radius: 8px; padding: 12px; text-align: center;">
+                                <div style="font-size: 24px;">✅</div>
+                                <div style="font-size: 12px; font-weight: bold; color: #059669;">All Systems Operational</div>
+                            </div>
+                            <div style="margin-top: 12px;">
+                                <div style="display: flex; gap: 8px;">
+                                    <button style="flex: 1; background: #1e293b; padding: 8px; border-radius: 8px; color: white; font-size: 12px;">👤 Human</button>
+                                    <button style="flex: 1; background: #1e293b; padding: 8px; border-radius: 8px; color: white; font-size: 12px;">🤖 Deepfake</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Installation -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4">📦 Installation</h2>
+            <p class="text-sm text-slate-400 mb-3">Add this code just before the closing <code class="bg-slate-800 px-1 py-0.5 rounded">&lt;/body&gt;</code> tag:</p>
+            <pre><code class="language-html">&lt;!-- BioShield Security Widget --&gt;
+&lt;script src="https://widget.bioshield.secure-bank.internal/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    BioShieldWidget.init({
+        apiKey: 'YOUR_API_KEY',
+        position: 'bottom-right',
+        theme: 'dark'
+    });
+&lt;/script&gt;</code></pre>
+            
+            <div class="mt-4 p-3 bg-amber-950/50 border border-amber-800 rounded-lg">
+                <p class="text-xs text-amber-400">⚠️ Note: Replace YOUR_API_KEY with your actual API key from the admin panel</p>
+            </div>
+        </div>
+        
+        <!-- Configuration -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4">⚙️ Configuration Options</h2>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-sm font-mono text-cyan-400">apiKey</span>
+                    <span class="text-xs text-slate-400">Your BioShield API key</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-sm font-mono text-cyan-400">position</span>
+                    <span class="text-xs text-slate-400">'bottom-right', 'bottom-left', 'top-right', 'top-left'</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-sm font-mono text-cyan-400">theme</span>
+                    <span class="text-xs text-slate-400">'dark', 'light', 'auto'</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-sm font-mono text-cyan-400">autoDetect</span>
+                    <span class="text-xs text-slate-400">true/false - Auto-analyze audio streams</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customization -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h2 class="text-lg font-bold mb-4">🎨 Custom Styling</h2>
+            <p class="text-sm text-slate-400 mb-3">Override default styles with CSS:</p>
+            <pre><code class="language-css">/* Custom widget styling */
+.bioshield-widget {
+    --primary-color: #ef4444;
+    --bg-color: #0f172a;
+    --border-color: #1e293b;
+}
+
+.bioshield-widget-button {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), #dc2626);
+}</code></pre>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-8 text-xs text-slate-600">
+            <p>© 2026 Sovereign Bio-Shield Networks Ltd. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
