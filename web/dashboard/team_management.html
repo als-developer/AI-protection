@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Team Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">👥 Team Management</h1>
+                <p class="text-sm text-slate-400">Manage team members and permissions</p>
+            </div>
+            <button onclick="addMember()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">+ Invite Member</button>
+        </div>
+
+        <!-- Team Members List -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-800/50">
+                        <tr>
+                            <th class="text-left p-3 text-xs text-slate-400">Name</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Email</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Role</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Last Active</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-slate-800"><td class="p-3">John Kamau</td><td class="p-3">john@nbt.co.tz</td><td class="p-3"><span class="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 rounded text-xs">Admin</span></td><td class="p-3 text-slate-400">Today</td><td class="p-3"><button class="text-slate-400 hover:text-white">Edit</button></td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3">Mary Njeri</td><td class="p-3">mary@nbt.co.tz</td><td class="p-3"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-xs">Security</span></td><td class="p-3 text-slate-400">Yesterday</td><td class="p-3"><button class="text-slate-400 hover:text-white">Edit</button></td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3">Peter Omondi</td><td class="p-3">peter@nbt.co.tz</td><td class="p-3"><span class="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">Viewer</span></td><td class="p-3 text-slate-400">2 days ago</td><td class="p-3"><button class="text-slate-400 hover:text-white">Edit</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Roles -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="font-bold text-indigo-400">Admin</h3>
+                <p class="text-xs text-slate-400 mt-1">Full access to all features</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="font-bold text-emerald-400">Security</h3>
+                <p class="text-xs text-slate-400 mt-1">Access to security dashboards and alerts</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="font-bold text-blue-400">Viewer</h3>
+                <p class="text-xs text-slate-400 mt-1">Read-only access to dashboards</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addMember() { alert("Invite new team member"); }
+    </script>
+</body>
+</html>
