@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Compliance Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold">📋 Compliance Dashboard</h1>
+                <p class="text-sm text-slate-400">GDPR | HIPAA | SOX | PCI DSS</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="exportReport()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-all">
+                    📄 Export Report
+                </button>
+                <select id="compliance-period" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                    <option value="month">Last 30 Days</option>
+                    <option value="quarter">Last Quarter</option>
+                    <option value="year">Last Year</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Compliance Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">GDPR</h3>
+                    <span class="text-emerald-400">✓ COMPLIANT</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2">
+                    <div class="bg-emerald-500 rounded-full h-2" style="width: 100%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">All requirements met</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">HIPAA</h3>
+                    <span class="text-emerald-400">✓ COMPLIANT</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2">
+                    <div class="bg-emerald-500 rounded-full h-2" style="width: 98%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">2 controls pending review</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">SOX</h3>
+                    <span class="text-emerald-400">✓ COMPLIANT</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2">
+                    <div class="bg-emerald-500 rounded-full h-2" style="width: 100%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">Audit trail verified</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold">PCI DSS</h3>
+                    <span class="text-emerald-400">✓ COMPLIANT</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2">
+                    <div class="bg-emerald-500 rounded-full h-2" style="width: 96%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">Annual audit pending</p>
+            </div>
+        </div>
+
+        <!-- Audit Log Section -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden mb-8">
+            <div class="p-4 border-b border-slate-800 bg-slate-800/30">
+                <h3 class="font-bold">📝 Audit Trail</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-800/50">
+                        <tr>
+                            <th class="text-left p-3 text-xs text-slate-400">Timestamp</th>
+                            <th class="text-left p-3 text-xs text-slate-400">User</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Action</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Resource</th>
+                            <th class="text-left p-3 text-xs text-slate-400">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 10:23:45</td><td class="p-3 text-xs">admin@bioshield</td><td class="p-3 text-xs">CONFIG_CHANGE</td><td class="p-3 text-xs">rate_limits</td><td class="p-3 text-xs font-mono">10.140.10.12</td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 09:15:22</td><td class="p-3 text-xs">security@bank</td><td class="p-3 text-xs">API_KEY_ROTATE</td><td class="p-3 text-xs">api_keys</td><td class="p-3 text-xs font-mono">192.168.1.100</td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 08:47:33</td><td class="p-3 text-xs">system</td><td class="p-3 text-xs">BACKUP_CREATED</td><td class="p-3 text-xs">database</td><td class="p-3 text-xs font-mono">127.0.0.1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Retention Policy -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h3 class="font-bold mb-4">🗄️ Data Retention Status</h3>
+            <div class="space-y-3">
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Audit Logs</span>
+                        <span>30 days / 90 days</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2">
+                        <div class="bg-emerald-500 rounded-full h-2" style="width: 33%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Deepfake Records</span>
+                        <span>45 days / 90 days</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2">
+                        <div class="bg-emerald-500 rounded-full h-2" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Backups</span>
+                        <span>15 days / 30 days</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2">
+                        <div class="bg-emerald-500 rounded-full h-2" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function exportReport() {
+            alert('Exporting compliance report...');
+        }
+    </script>
+</body>
+</html>
