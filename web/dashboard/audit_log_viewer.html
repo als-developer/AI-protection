@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Audit Log Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">📋 Audit Log Viewer</h1>
+                <p class="text-sm text-slate-400">Search and filter security audit logs</p>
+            </div>
+            <button onclick="exportLogs()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm">Export CSV</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <input type="text" id="search" placeholder="Search..." class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                <select id="action-filter" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                    <option value="">All Actions</option>
+                    <option>CONFIG_CHANGE</option>
+                    <option>API_KEY_ROTATE</option>
+                    <option>USER_LOGIN</option>
+                    <option>BACKUP_CREATED</option>
+                </select>
+                <input type="date" id="date-from" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                <input type="date" id="date-to" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+            </div>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-800/50">
+                        <tr>
+                            <th class="text-left p-3 text-xs text-slate-400">Timestamp</th>
+                            <th class="text-left p-3 text-xs text-slate-400">User</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Action</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Resource</th>
+                            <th class="text-left p-3 text-xs text-slate-400">IP Address</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table">
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 10:23:45</td><td class="p-3 text-xs">admin@bioshield</td><td class="p-3 text-xs"><span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">CONFIG_CHANGE</span></td><td class="p-3 text-xs">rate_limits</td><td class="p-3 text-xs font-mono">10.140.10.12</td><td class="p-3 text-xs">Rate limit changed from 10000 to 15000</td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 09:15:22</td><td class="p-3 text-xs">security@bank</td><td class="p-3 text-xs"><span class="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">API_KEY_ROTATE</span></td><td class="p-3 text-xs">api_keys</td><td class="p-3 text-xs font-mono">192.168.1.100</td><td class="p-3 text-xs">API key rotated for client National Bank</td></tr>
+                        <tr class="border-t border-slate-800"><td class="p-3 text-xs">2026-06-01 08:47:33</td><td class="p-3 text-xs">system</td><td class="p-3 text-xs"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded">BACKUP_CREATED</span></td><td class="p-3 text-xs">database</td><td class="p-3 text-xs font-mono">127.0.0.1</td><td class="p-3 text-xs">Daily backup completed successfully</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function exportLogs() {
+            alert("Exporting audit logs to CSV...");
+        }
+    </script>
+</body>
+</html>
