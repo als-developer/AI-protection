@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed - BioShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-20 max-w-2xl text-center">
+        <div class="bg-red-500/20 border border-red-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+            <div class="text-5xl">❌</div>
+        </div>
+        
+        <h1 class="text-3xl font-bold mb-4">Payment Failed</h1>
+        <p class="text-slate-400 mb-8">We couldn't process your payment. Please try again or contact support.</p>
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 text-left">
+            <h3 class="font-bold mb-3">What went wrong?</h3>
+            <ul class="space-y-2 text-sm text-slate-400">
+                <li>• Insufficient funds in your PayPal account</li>
+                <li>• Payment method declined by your bank</li>
+                <li>• Technical issue with payment processor</li>
+            </ul>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/billing/checkout.html" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-bold transition-all">Try Again</a>
+            <a href="/dashboard/index.html" class="border border-slate-700 hover:bg-slate-800 px-6 py-3 rounded-xl font-bold transition-all">Return to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
