@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="text-5xl mb-4">🛡️</div>
+            <h1 class="text-3xl font-bold">API Documentation</h1>
+            <p class="text-slate-400 mt-2">Sovereign Bio-Shield Ultimate - Deepfake Detection API</p>
+        </div>
+
+        <!-- Base URL -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-8">
+            <p class="text-sm text-slate-400">Base URL</p>
+            <code class="text-cyan-400 text-lg">https://api.bioshield.secure-bank.internal/v1</code>
+        </div>
+
+        <!-- Authentication -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-bold mb-4">🔑 Authentication</h2>
+            <p class="text-sm text-slate-400 mb-3">All API requests require an API key in the header:</p>
+            <pre><code class="language-bash">curl -X POST https://api.bioshield/v1/audit-voice \
+  -H "X-BioShield-Token: YOUR_API_KEY" \
+  -H "Content-Type: application/json"</code></pre>
+        </div>
+
+        <!-- Endpoints -->
+        <div class="space-y-6">
+            <!-- POST /audit-voice -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div class="bg-slate-800/50 p-4 border-b border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold">POST</span>
+                        <code class="text-cyan-400">/audit-voice</code>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-4">Analyze a voice stream for deepfake detection</p>
+                    
+                    <h4 class="text-sm font-bold mb-2">Request Body</h4>
+                    <pre><code class="language-json">{
+  "bank_cluster_token": "string",
+  "channel_identity": "string",
+  "frequency_amplitude_deltas": [float],
+  "metadata": {}
+}</code></pre>
+                    
+                    <h4 class="text-sm font-bold mt-4 mb-2">Response</h4>
+                    <pre><code class="language-json">{
+  "security_token": "string",
+  "evaluation_verdict": "VERIFIED_HUMAN_AUTHENTIC | CRITICAL_SUSPECTED_DEEPFAKE",
+  "fraud_risk_index": "string",
+  "firewall_action": "ALLOW | TERMINATE_CALL"
+}</code></pre>
+                    
+                    <h4 class="text-sm font-bold mt-4 mb-2">Example</h4>
+                    <pre><code class="language-bash">curl -X POST https://api.bioshield/v1/audit-voice \
+  -H "X-BioShield-Token: sk_live_key" \
+  -d '{
+    "bank_cluster_token": "crdb_hq_main",
+    "channel_identity": "sip_trunk_01",
+    "frequency_amplitude_deltas": [0.12, 0.12, 0.11]
+  }'</code></pre>
+                </div>
+            </div>
+
+            <!-- GET /health -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div class="bg-slate-800/50 p-4 border-b border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-bold">GET</span>
+                        <code class="text-cyan-400">/health</code>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-400 mb-4">Check system health</p>
+                    <pre><code class="language-bash">curl https://api.bioshield/v1/health</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Codes -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-8">
+            <h2 class="text-lg font-bold mb-4">⚠️ Error Codes</h2>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                    <code class="text-red-400">401</code>
+                    <span class="text-sm text-slate-400">Invalid or missing API key</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                    <code class="text-amber-400">429</code>
+                    <span class="text-sm text-slate-400">Rate limit exceeded</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                    <code class="text-red-400">400</code>
+                    <span class="text-sm text-slate-400">Invalid request payload</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-slate-800/30 rounded">
+                    <code class="text-red-400">500</code>
+                    <span class="text-sm text-slate-400">Internal server error</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SDKs -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mt-8">
+            <h2 class="text-lg font-bold mb-4">📦 SDKs & Libraries</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <a href="#" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-lg text-center transition-all">
+                    <span class="text-xl">🐍</span>
+                    <p class="text-sm font-mono mt-1">Python SDK</p>
+                </a>
+                <a href="#" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-lg text-center transition-all">
+                    <span class="text-xl">📘</span>
+                    <p class="text-sm font-mono mt-1">Node.js SDK</p>
+                </a>
+                <a href="#" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-lg text-center transition-all">
+                    <span class="text-xl">☕</span>
+                    <p class="text-sm font-mono mt-1">Java SDK</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
