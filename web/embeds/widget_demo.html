@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield Widget Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .demo-card {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-slate-950 min-h-screen">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="text-center mb-12">
+            <div class="text-6xl mb-4">🛡️</div>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-red-500 to-rose-400 bg-clip-text text-transparent">
+                BioShield Security Widget
+            </h1>
+            <p class="text-slate-400 mt-2">See the widget in action below</p>
+        </div>
+
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+            <p class="text-slate-300 mb-6">This page demonstrates the BioShield security widget.</p>
+            <p class="text-sm text-slate-400">The widget will appear in the bottom-right corner of this page.</p>
+        </div>
+    </div>
+
+    <!-- Widget Script -->
+    <script src="widget.js"></script>
+    <script>
+        if (typeof BioShieldWidget !== 'undefined') {
+            BioShieldWidget.init({
+                apiKey: 'sk_demo_widget_key',
+                position: 'bottom-right',
+                theme: 'dark'
+            });
+        }
+    </script>
+</body>
+</html>
