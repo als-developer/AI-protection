@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Balance - BioShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold">💰 Account Balance</h1>
+                <p class="text-sm text-slate-400">Manage your credits and payment methods</p>
+            </div>
+            <a href="/billing/pricing.html" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm transition-all">Buy Credits</a>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 text-white">
+            <p class="text-sm opacity-90">Available Credits</p>
+            <p class="text-4xl font-bold mt-2" id="balance">--</p>
+            <p class="text-xs opacity-75 mt-2">1 credit = 1 API scan</p>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-800 bg-slate-800/30">
+                <h3 class="font-bold">📜 Transaction History</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-800/50">
+                        <tr>
+                            <th class="text-left p-3 text-xs text-slate-400">Date</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Description</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Amount</th>
+                            <th class="text-left p-3 text-xs text-slate-400">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions">
+                        <tr><td colspan="4" class="text-center p-6 text-slate-500">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadBalance() {
+            const apiKey = localStorage.getItem('apiKey');
+            if (!apiKey) {
+                document.getElementById('balance').innerText = 'Please login';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/v1/billing/balance', {
+                    headers: { 'X-BioShield-Token': apiKey }
+                });
+                const data = await response.json();
+                document.getElementById('balance').innerText = `$${data.balance_usd || 0}`;
+            } catch (error) {
+                document.getElementById('balance').innerText = 'Error loading';
+            }
+        }
+        
+        loadBalance();
+    </script>
+</body>
+</html>
