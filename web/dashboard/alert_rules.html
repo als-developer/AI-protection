@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Alert Rules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🔔 Alert Rules Configuration</h1>
+                <p class="text-sm text-slate-400">Configure security alert thresholds</p>
+            </div>
+            <button onclick="addRule()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">+ Add Rule</button>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Rule 1 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold">High Deepfake Detection Rate</h3>
+                        <p class="text-sm text-slate-400 mt-1">Trigger when deepfake rate exceeds threshold</p>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <span class="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded">CRITICAL</span>
+                            <span class="text-xs">Condition: >50 deepfakes/min</span>
+                            <span class="text-xs">Action: Page on-call + Slack</span>
+                        </div>
+                    </div>
+                    <button onclick="editRule(1)" class="text-slate-400 hover:text-white">✏️ Edit</button>
+                </div>
+            </div>
+
+            <!-- Rule 2 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold">API Latency Spike</h3>
+                        <p class="text-sm text-slate-400 mt-1">Trigger when API response time degrades</p>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <span class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded">HIGH</span>
+                            <span class="text-xs">Condition: p99 latency >50ms</span>
+                            <span class="text-xs">Action: Email + Slack</span>
+                        </div>
+                    </div>
+                    <button onclick="editRule(2)" class="text-slate-400 hover:text-white">✏️ Edit</button>
+                </div>
+            </div>
+
+            <!-- Rule 3 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold">Engine Failure</h3>
+                        <p class="text-sm text-slate-400 mt-1">Trigger when core engine stops responding</p>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <span class="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded">CRITICAL</span>
+                            <span class="text-xs">Condition: engine down >30s</span>
+                            <span class="text-xs">Action: Page on-call + Auto-restart</span>
+                        </div>
+                    </div>
+                    <button onclick="editRule(3)" class="text-slate-400 hover:text-white">✏️ Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addRule() { alert("Add new alert rule"); }
+        function editRule(id) { alert(`Edit rule ${id}`); }
+    </script>
+</body>
+</html>
