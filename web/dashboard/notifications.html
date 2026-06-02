@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Notifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🔔 Notification Center</h1>
+                <p class="text-sm text-slate-400">Recent alerts and notifications</p>
+            </div>
+            <button onclick="markAllRead()" class="text-sm text-slate-400 hover:text-white">Mark all as read</button>
+        </div>
+
+        <div class="space-y-3">
+            <div class="bg-red-950/30 border border-red-800 rounded-xl p-4 flex justify-between items-center">
+                <div><span class="text-red-400 font-bold">🚨 CRITICAL</span><p class="text-sm mt-1">Massive deepfake attack detected on channel sip_trunk_01</p><p class="text-xs text-slate-500 mt-1">2 minutes ago</p></div>
+                <button class="text-xs text-slate-400">Mark read</button>
+            </div>
+            <div class="bg-amber-950/30 border border-amber-800 rounded-xl p-4 flex justify-between items-center">
+                <div><span class="text-amber-400 font-bold">⚠️ HIGH</span><p class="text-sm mt-1">Rate limit exceeded by client enterprise_bank_03</p><p class="text-xs text-slate-500 mt-1">15 minutes ago</p></div>
+                <button class="text-xs text-slate-400">Mark read</button>
+            </div>
+            <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-4 flex justify-between items-center">
+                <div><span class="text-blue-400 font-bold">ℹ️ INFO</span><p class="text-sm mt-1">Daily backup completed successfully</p><p class="text-xs text-slate-500 mt-1">1 hour ago</p></div>
+                <button class="text-xs text-slate-400">Mark read</button>
+            </div>
+        </div>
+    </div>
+
+    <script>function markAllRead() { alert("All notifications marked as read"); }</script>
+</body>
+</html>
