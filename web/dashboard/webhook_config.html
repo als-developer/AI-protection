@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Webhook Configuration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🔗 Webhook Configuration</h1>
+                <p class="text-sm text-slate-400">Configure real-time alerts and integrations</p>
+            </div>
+            <button onclick="addWebhook()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">+ Add Webhook</button>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Webhook 1 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold">Security Alerts - Slack</h3>
+                        <p class="text-sm text-slate-400 mt-1">https://hooks.slack.com/services/xxx/xxx/xxx</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span class="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded">Critical Events</span>
+                            <span class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded">High Events</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="testWebhook(1)" class="text-xs text-cyan-400">Test</button>
+                        <button onclick="deleteWebhook(1)" class="text-xs text-red-400">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Webhook 2 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold">Audit Logs - SIEM</h3>
+                        <p class="text-sm text-slate-400 mt-1">https://siem.internal/ingest/bioshield</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">All Events</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="testWebhook(2)" class="text-xs text-cyan-400">Test</button>
+                        <button onclick="deleteWebhook(2)" class="text-xs text-red-400">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Webhook Form -->
+        <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-bold mb-4">➕ Create New Webhook</h3>
+            <div class="space-y-3">
+                <input type="text" placeholder="Webhook Name" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                <input type="url" placeholder="Endpoint URL" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                <select class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
+                    <option>Critical Only</option>
+                    <option>Critical + High</option>
+                    <option>All Events</option>
+                </select>
+                <button class="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg text-sm font-bold">Create Webhook</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addWebhook() { alert("Add new webhook form"); }
+        function testWebhook(id) { alert(`Testing webhook ${id}`); }
+        function deleteWebhook(id) { alert(`Delete webhook ${id}`); }
+    </script>
+</body>
+</html>
