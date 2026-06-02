@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Network Topology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+        .link {
+            stroke: #64748b;
+            stroke-width: 2px;
+            stroke-opacity: 0.6;
+        }
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+        .node text {
+            fill: #cbd5e1;
+            font-size: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">🌐 Global Network Topology</h1>
+                <p class="text-sm text-slate-400">Distributed edge node mesh</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                <span class="text-xs">19 nodes online</span>
+                <span class="w-2 h-2 bg-amber-500 rounded-full ml-2"></span>
+                <span class="text-xs">3 nodes syncing</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Network Graph -->
+            <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div id="network-graph" style="height: 500px;"></div>
+            </div>
+
+            <!-- Node Details -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <h3 class="font-bold mb-3">📍 Node Details</h3>
+                <div id="node-details" class="space-y-3">
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <p class="text-xs text-slate-400">Region</p>
+                        <p class="font-bold">Africa - Primary</p>
+                        <p class="text-xs text-emerald-400 mt-1">● Online</p>
+                        <div class="mt-2 text-xs text-slate-400">
+                            <div>Latency: 8.7ms</div>
+                            <div>Load: 42%</div>
+                            <div>Pods: 3/3</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <p class="text-xs text-slate-400">Region</p>
+                        <p class="font-bold">Europe - West</p>
+                        <p class="text-xs text-emerald-400 mt-1">● Online</p>
+                        <div class="mt-2 text-xs text-slate-400">
+                            <div>Latency: 12.3ms</div>
+                            <div>Load: 38%</div>
+                            <div>Pods: 3/3</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/30 rounded-lg p-3">
+                        <p class="text-xs text-slate-400">Region</p>
+                        <p class="font-bold">Asia - Pacific</p>
+                        <p class="text-xs text-amber-400 mt-1">● Syncing</p>
+                        <div class="mt-2 text-xs text-slate-400">
+                            <div>Latency: 45.2ms</div>
+                            <div>Load: 78%</div>
+                            <div>Pods: 2/3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Network graph data
+        const nodes = [
+            { id: "AF-Primary", group: 1, region: "Africa", lat: -6.8, lon: 39.2, status: "online", latency: 8.7, load: 42 },
+            { id: "EU-West", group: 1, region: "Europe", lat: 51.5, lon: -0.1, status: "online", latency: 12.3, load: 38 },
+            { id: "AP-South", group: 1, region: "Asia", lat: 1.3, lon: 103.8, status: "syncing", latency: 45.2, load: 78 },
+            { id: "NA-East", group: 1, region: "North America", lat: 40.7, lon: -74.0, status: "online", latency: 15.6, load: 35 },
+            { id: "SA-East", group: 1, region: "South America", lat: -23.5, lon: -46.6, status: "online", latency: 28.4, load: 52 },
+            { id: "AF-Secondary", group: 2, region: "Africa", lat: -1.2, lon: 36.8, status: "online", latency: 9.2, load: 28 },
+            { id: "EU-North", group: 2, region: "Europe", lat: 59.3, lon: 18.0, status: "online", latency: 14.1, load: 31 }
+        ];
+
+        const links = [
+            { source: "AF-Primary", target: "AF-Secondary", value: 1 },
+            { source: "AF-Primary", target: "EU-West", value: 1 },
+            { source: "AF-Primary", target: "AP-South", value: 1 },
+            { source: "EU-West", target: "NA-East", value: 1 },
+            { source: "EU-West", target: "EU-North", value: 1 },
+            { source: "NA-East", target: "SA-East", value: 1 },
+            { source: "AP-South", target: "EU-West", value: 1 }
+        ];
+
+        const width = 800, height = 500;
+        const svg = d3.select("#network-graph").append("svg").attr("width", width).attr("height", height).style("background", "transparent");
+        
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const link = svg.append("g").selectAll("line").data(links).enter().append("line").attr("class", "link").attr("stroke", "#64748b").attr("stroke-width", 2);
+        
+        const node = svg.append("g").selectAll("g").data(nodes).enter().append("g").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+        
+        node.append("circle").attr("r", 12).attr("fill", d => d.status === "online" ? "#10b981" : "#f59e0b").attr("stroke", "#fff").attr("stroke-width", 2);
+        
+        node.append("text").text(d => d.region).attr("x", 15).attr("y", 4).style("font-size", "10px").style("fill", "#cbd5e1").style("font-family", "monospace");
+
+        simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+        function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+        function dragended(event, d) { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+
+        node.on("click", function(event, d) {
+            document.getElementById('node-details').innerHTML = `
+                <div class="bg-slate-800/30 rounded-lg p-3">
+                    <p class="text-xs text-slate-400">Region</p>
+                    <p class="font-bold">${d.region}</p>
+                    <p class="text-xs ${d.status === 'online' ? 'text-emerald-400' : 'text-amber-400'} mt-1">● ${d.status === 'online' ? 'Online' : 'Syncing'}</p>
+                    <div class="mt-2 text-xs text-slate-400">
+                        <div>Latency: ${d.latency}ms</div>
+                        <div>Load: ${d.load}%</div>
+                        <div>Pods: ${d.status === 'online' ? '3/3' : '2/3'}</div>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
