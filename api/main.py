@@ -126,3 +126,10 @@ if __name__ == "__main__":
         workers=settings.WORKERS_COUNT,
         log_level="info"
     )
+
+
+# Add this line to include PayPal router
+from routers import voice_audit, health, metrics, admin, billing, dashboard, paypal
+
+# Add this after other router inclusions
+app.include_router(paypal.router, prefix="/v1", tags=["PayPal Payments"])
