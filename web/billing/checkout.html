@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioShield - Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AdYZjwcxNYqpWCglcoqt4cv0ESkJ-G3RChAAuuET&currency=USD&components=buttons"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="text-5xl mb-3">💰</div>
+            <h1 class="text-3xl font-bold">Complete Your Purchase</h1>
+            <p class="text-slate-400 mt-2">Secure payment via PayPal</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Order Summary -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-lg font-bold mb-4">Order Summary</h2>
+                
+                <div id="order-summary" class="space-y-4">
+                    <!-- Package details will be inserted here -->
+                </div>
+                
+                <div class="border-t border-slate-800 mt-4 pt-4">
+                    <div class="flex justify-between font-bold">
+                        <span>Total</span>
+                        <span id="total-amount" class="text-xl text-emerald-400">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-lg font-bold mb-4">Payment Method</h2>
+                
+                <!-- PayPal Button Container -->
+                <div id="paypal-button-container"></div>
+                
+                <div class="mt-4 text-center text-xs text-slate-500">
+                    <p>Your payment is secure and encrypted</p>
+                    <p class="mt-1">By completing this purchase, you agree to our Terms of Service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get package info from URL or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const packageId = urlParams.get('package') || 'professional';
+        
+        // Package pricing
+        const packages = {
+            starter: { name: 'Starter Package', credits: 1000, price: 50, savings: 0 },
+            professional: { name: 'Professional Package', credits: 5000, price: 200, savings: 20 },
+            business: { name: 'Business Package', credits: 12000, price: 450, savings: 25 },
+            enterprise: { name: 'Enterprise Package', credits: 30000, price: 1000, savings: 30 }
+        };
+        
+        const selectedPackage = packages[packageId] || packages.professional;
+        
+        // Update order summary
+        function updateOrderSummary() {
+            const summaryHtml = `
+                <div class="flex justify-between">
+                    <span>${selectedPackage.name}</span>
+                    <span>$${selectedPackage.price.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span>${selectedPackage.credits.toLocaleString()} API credits</span>
+                    <span>${selectedPackage.savings > 0 ? `Save ${selectedPackage.savings}%` : ''}</span>
+                </div>
+            `;
+            document.getElementById('order-summary').innerHTML = summaryHtml;
+            document.getElementById('total-amount').innerText = `$${selectedPackage.price.toFixed(2)}`;
+        }
+        
+        updateOrderSummary();
+        
+        // Initialize PayPal button
+        paypal.Buttons({
+            createOrder: async function(data, actions) {
+                try {
+                    const response = await fetch('/v1/paypal/create-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-BioShield-Token': localStorage.getItem('apiKey') || ''
+                        },
+                        body: JSON.stringify({
+                            amount: selectedPackage.price,
+                            currency: 'USD',
+                            package_name: selectedPackage.name
+                        })
+                    });
+                    
+                    const orderData = await response.json();
+                    
+                    if (orderData.order_id) {
+                        return orderData.order_id;
+                    } else {
+                        const errorDetail = orderData.details?.[0];
+                        const errorMessage = errorDetail?.issue || 'Could not create order';
+                        throw new Error(errorMessage);
+                    }
+                } catch (error) {
+                    console.error('Order creation failed:', error);
+                    alert('Could not initialize PayPal. Please try again.');
+                }
+            },
+            onApprove: async function(data, actions) {
+                try {
+                    const response = await fetch(`/v1/paypal/capture-order/${data.orderID}`, {
+                        method: 'GET'
+                    });
+                    
+                    const orderData = await response.json();
+                    
+                    if (orderData.success || response.ok) {
+                        window.location.href = `/payment/success?order_id=${data.orderID}&amount=${selectedPackage.price}`;
+                    } else {
+                        window.location.href = `/payment/failed?order_id=${data.orderID}`;
+                    }
+                } catch (error) {
+                    console.error('Capture failed:', error);
+                    window.location.href = '/payment/error';
+                }
+            },
+            onError: function(err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred with PayPal. Please try again.');
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
